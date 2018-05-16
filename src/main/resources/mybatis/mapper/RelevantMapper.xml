@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.happycao.lingxi.dao.RelevantDao">
+
+  <!-- 与我相关 -->
+  <resultMap id="RelevantMap" type="me.happycao.lingxi.model.Relevant">
+    <!-- 动态 -->
+    <association column="feed_id" property="feed" select="selectRelevantFeed"/>
+    <!-- 评论 -->
+    <association column="id" property="comment" select="selectRelevantComment"/>
+    <!-- 总回复数 -->
+    <association column="id" property="replyNum" select="selectRelevantReplyNum"/>
+    <!-- 回复 -->
+    <collection column="id" property="replyList" select="selectRelevantReply"/>
+  </resultMap>
+
+  <!-- 与我相关动态 -->
+  <resultMap id="RelevantFeedMap" type="me.happycao.lingxi.model.Feed">
+    <id column="id" jdbcType="VARCHAR" property="id"/>
+    <result column="feed_info" jdbcType="VARCHAR" property="feedInfo"/>
+    <result column="view_num" jdbcType="INTEGER" property="viewNum"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <!-- 评论数 -->
+    <association column="id" property="commentNum" select="selectCommentNum"/>
+    <!-- 用户信息 -->
+    <association column="user_id" property="user" select="selectUserById"/>
+  </resultMap>
+
+  <!-- 与我相关评论 -->
+  <resultMap id="RelevantCommentMap" type="me.happycao.lingxi.model.Comment">
+    <id column="id" jdbcType="VARCHAR" property="id"/>
+    <result column="feed_id" jdbcType="VARCHAR" property="feedId"/>
+    <result column="comment_info" jdbcType="VARCHAR" property="commentInfo"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <!-- 用户信息 -->
+    <association column="user_id" property="user" select="selectUserById"/>
+  </resultMap>
+
+  <resultMap id="RelevantReplyMap" type="me.happycao.lingxi.model.Reply">
+    <id column="id" jdbcType="VARCHAR" property="id"/>
+    <result column="feed_id" jdbcType="VARCHAR" property="feedId"/>
+    <result column="comment_id" jdbcType="VARCHAR" property="commentId"/>
+    <result column="comment_info" jdbcType="VARCHAR" property="commentInfo"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <!-- 用户信息 -->
+    <association column="user_id" property="user" select="selectUserById"/>
+  </resultMap>
+
+  <!-- 用户部分 -->
+  <resultMap id="UserMap" type="me.happycao.lingxi.model.User">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="im_token" jdbcType="VARCHAR" property="imToken" />
+  </resultMap>
+
+  <!-- 分页 -->
+  <sql id="page_size">
+    <if test="pageNum!=null and pageSize!=null">
+      LIMIT ${pageSize * (pageNum -1)},#{pageSize}
+    </if>
+  </sql>
+
+  <!-- 与我相关总数 -->
+  <select id="relevantTotal" parameterType="UserIdVO" resultType="Integer">
+    SELECT count(id)
+    FROM t_feed_comment
+    WHERE type = 0
+    AND state = 1
+    AND to_user_id = #{userId}
+  </select>
+
+  <!-- 与我相关列表 -->
+  <select id="pageRelevant" parameterType="RelevantVO" resultMap="RelevantMap">
+    SELECT id, feed_id, user_id, to_user_id
+    FROM t_feed_comment
+    WHERE type = 0
+    AND state = 1
+    AND to_user_id = #{userId}
+    ORDER BY create_time DESC
+    <include refid="page_size"/>
+  </select>
+
+  <!-- 我的回复总数 -->
+  <select id="mineReplyTotal" parameterType="UserIdVO" resultType="Integer">
+    SELECT count(id)
+    FROM (
+      SELECT DISTINCT IFNULL(comment_id, id) id
+      FROM t_feed_comment
+      WHERE state = 1
+      AND user_id = #{userId}
+    ) t
+  </select>
+
+  <!-- 我的回复列表 -->
+  <select id="pageMineReply" parameterType="RelevantVO" resultMap="RelevantMap">
+    SELECT DISTINCT IFNULL(comment_id, id) id, feed_id, user_id, to_user_id
+    FROM t_feed_comment
+    WHERE state = 1
+    AND user_id = #{userId}
+    ORDER BY create_time DESC
+    <include refid="page_size"/>
+  </select>
+
+  <!-- 与我相关动态 -->
+  <select id="selectRelevantFeed" parameterType="String" resultMap="RelevantFeedMap">
+    SELECT id, feed_info, user_id, view_num, create_time, update_time
+    FROM t_feed
+    WHERE id = #{feed_id}
+  </select>
+
+  <!-- 评论数 -->
+  <select id="selectCommentNum" parameterType="String" resultType="INTEGER">
+    SELECT count(id)
+    FROM t_feed_comment
+    WHERE type = 0
+    AND feed_id = #{id}
+  </select>
+
+  <!-- 与我相关动态评论 -->
+  <select id="selectRelevantComment" parameterType="String" resultMap="RelevantCommentMap">
+    SELECT id, feed_id, user_id, comment_info, create_time, update_time
+    FROM t_feed_comment
+    WHERE id = #{id}
+  </select>
+
+  <!-- 与我相关动态评论回复数 -->
+  <select id="selectRelevantReplyNum" parameterType="String" resultType="Integer">
+    SELECT count(id) total
+    FROM t_feed_comment
+    WHERE type = 1
+    AND state = 1
+    AND comment_id = #{id}
+  </select>
+
+  <!-- 与我相关动态评论回复 -->
+  <select id="selectRelevantReply" parameterType="String" resultMap="RelevantReplyMap">
+    SELECT id, feed_id, comment_id, user_id, to_user_id, comment_info, create_time, update_time
+    FROM t_feed_comment
+    WHERE type = 1
+    AND state = 1
+    AND comment_id = #{id}
+    ORDER BY create_time DESC
+    LIMIT 5
+  </select>
+
+  <!-- 通过id查找用户 -->
+  <select id="selectUserById" parameterType="String" resultMap="UserMap">
+    SELECT id, username, avatar, im_token
+    FROM t_user
+    WHERE id = #{id}
+  </select>
+</mapper>

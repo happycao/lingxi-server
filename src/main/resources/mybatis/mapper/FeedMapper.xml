@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.happycao.lingxi.dao.FeedDao">
+  <!-- 动态部分 -->
+  <resultMap id="FeedMap" type="me.happycao.lingxi.model.Feed">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="feed_info" jdbcType="VARCHAR" property="feedInfo" />
+    <result column="view_num" jdbcType="INTEGER" property="viewNum" />
+    <result column="is_like" jdbcType="TINYINT" property="like" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <!-- 评论数 -->
+    <association column="id" property="commentNum" select="selectCommentNum"/>
+    <!-- 用户信息 -->
+    <association column="user_id" property="user" select="selectUserById"/>
+    <!-- 点赞列表 -->
+    <collection column="id" property="likeList" select="selectFeedLikeById"/>
+    <!-- 动态相册 -->
+    <collection column="id" property="photoList" select="selectFeedPhoto"/>
+  </resultMap>
+  <!-- 分页 -->
+  <sql id="page_size">
+    <if test="pageNum!=null and pageSize!=null">
+      LIMIT ${pageSize * (pageNum -1)},#{pageSize}
+    </if>
+  </sql>
+  <!-- 动态总条数 -->
+  <select id="feedTotal" parameterType="StateVO" resultType="Integer">
+    SELECT count(id)
+    FROM t_feed
+    <where>
+      <if test="state != null">
+        state = #{state}
+      </if>
+    </where>
+  </select>
+
+  <!-- 动态列表 -->
+  <select id="pageFeed" parameterType="FeedSearchVO" resultMap="FeedMap">
+    SELECT f.id, f.feed_info, f.user_id, f.view_num, f.create_time, f.update_time,
+    (
+      SELECT count(tfa.id)
+      FROM t_feed_action tfa
+      WHERE tfa.type = 0
+        AND tfa.feed_id = f.id
+        AND tfa.user_id = #{userId}
+    ) is_like
+    FROM t_feed f
+    WHERE f.state = 1
+    <if test="searchUserId != null and searchUserId != ''">
+      and f.user_id = #{searchUserId}
+    </if>
+    ORDER BY f.create_time DESC
+    <include refid="page_size"/>
+  </select>
+
+  <select id="selectFeedPhoto" parameterType="String" resultType="String">
+    SELECT url
+    FROM t_feed_photo
+    WHERE feed_id = #{id}
+    AND state = 1
+  </select>
+
+  <!-- 评论数 -->
+  <select id="selectCommentNum" parameterType="String" resultType="INTEGER">
+    SELECT count(id)
+    FROM t_feed_comment
+    WHERE type = 0
+      AND feed_id = #{id}
+  </select>
+
+  <!-- 用户部分 -->
+  <resultMap id="UserMap" type="me.happycao.lingxi.model.User">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="im_token" jdbcType="VARCHAR" property="imToken" />
+  </resultMap>
+  <!-- 通过id查找用户 -->
+  <select id="selectUserById" parameterType="String" resultMap="UserMap">
+    select id, username, avatar, im_token
+    from t_user
+    where id = #{id}
+  </select>
+
+  <!-- 点赞部分 -->
+  <resultMap id="LikeMap" type="me.happycao.lingxi.model.Like">
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+  </resultMap>
+  <!-- 点赞用户 -->
+  <select id="selectFeedLikeById" parameterType="String" resultMap="LikeMap">
+    SELECT tfa.user_id, tu.username
+    FROM t_feed_action tfa
+    LEFT OUTER JOIN t_user tu
+    ON tfa.user_id = tu.id
+    WHERE type = 0
+      AND tfa.feed_id = #{id}
+  </select>
+  <!-- 查询是否点赞 -->
+  <select id="selectIsLike" parameterType="Map" resultType="Boolean">
+    SELECT count(id) is_like
+    FROM t_feed_action
+    WHERE type = 0
+      AND  user_id = #{user_id}
+      AND feed_id = #{id}
+    limit 1
+  </select>
+  <!-- 点赞数 -->
+  <select id="selectLikeNum" parameterType="String" resultType="Integer">
+    SELECT count(id)
+    FROM t_feed_action
+    WHERE type = 0
+      AND feed_id = #{id}
+  </select>
+
+  <update id="viewFeed" parameterType="IdVO">
+    UPDATE t_feed
+    SET view_num = (view_num + 1)
+    WHERE id = #{id}
+  </update>
+
+</mapper>
