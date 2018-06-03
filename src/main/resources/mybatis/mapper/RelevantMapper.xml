@@ -7,11 +7,11 @@
     <!-- 动态 -->
     <association column="feed_id" property="feed" select="selectRelevantFeed"/>
     <!-- 评论 -->
-    <association column="id" property="comment" select="selectRelevantComment"/>
+    <association column="cid" property="comment" select="selectRelevantComment"/>
     <!-- 总回复数 -->
-    <association column="id" property="replyNum" select="selectRelevantReplyNum"/>
+    <association column="cid" property="replyNum" select="selectRelevantReplyNum"/>
     <!-- 回复 -->
-    <collection column="id" property="replyList" select="selectRelevantReply"/>
+    <collection column="cid" property="replyList" select="selectRelevantReply"/>
   </resultMap>
 
   <!-- 与我相关动态 -->
@@ -60,44 +60,47 @@
   <!-- 分页 -->
   <sql id="page_size">
     <if test="pageNum!=null and pageSize!=null">
-      LIMIT ${pageSize * (pageNum -1)},#{pageSize}
+      LIMIT ${pageSize * (pageNum -1)}, #{pageSize}
     </if>
   </sql>
 
   <!-- 与我相关总数 -->
   <select id="relevantTotal" parameterType="UserIdVO" resultType="Integer">
-    SELECT count(id)
-    FROM t_feed_comment
-    WHERE type = 0
-    AND state = 1
-    AND to_user_id = #{userId}
+    SELECT COUNT(cid) count
+    FROM (
+      SELECT DISTINCT IFNULL(comment_id, id) cid
+      FROM t_feed_comment
+      WHERE state = 1
+      AND to_user_id = #{userId}
+      GROUP BY cid
+    ) temp
   </select>
 
   <!-- 与我相关列表 -->
   <select id="pageRelevant" parameterType="RelevantVO" resultMap="RelevantMap">
-    SELECT id, feed_id, user_id, to_user_id
+    SELECT DISTINCT IFNULL(comment_id, id) cid, feed_id, user_id, to_user_id
     FROM t_feed_comment
-    WHERE type = 0
-    AND state = 1
+    WHERE state = 1
     AND to_user_id = #{userId}
+    GROUP BY cid
     ORDER BY create_time DESC
     <include refid="page_size"/>
   </select>
 
   <!-- 我的回复总数 -->
   <select id="mineReplyTotal" parameterType="UserIdVO" resultType="Integer">
-    SELECT count(id)
+    SELECT count(cid) count
     FROM (
-      SELECT DISTINCT IFNULL(comment_id, id) id
+      SELECT DISTINCT IFNULL(comment_id, id) cid
       FROM t_feed_comment
       WHERE state = 1
       AND user_id = #{userId}
-    ) t
+    ) temp
   </select>
 
   <!-- 我的回复列表 -->
   <select id="pageMineReply" parameterType="RelevantVO" resultMap="RelevantMap">
-    SELECT DISTINCT IFNULL(comment_id, id) id, feed_id, user_id, to_user_id
+    SELECT DISTINCT IFNULL(comment_id, id) cid, feed_id, user_id, to_user_id
     FROM t_feed_comment
     WHERE state = 1
     AND user_id = #{userId}
@@ -124,7 +127,7 @@
   <select id="selectRelevantComment" parameterType="String" resultMap="RelevantCommentMap">
     SELECT id, feed_id, user_id, comment_info, create_time, update_time
     FROM t_feed_comment
-    WHERE id = #{id}
+    WHERE id = #{cid}
   </select>
 
   <!-- 与我相关动态评论回复数 -->
@@ -133,7 +136,7 @@
     FROM t_feed_comment
     WHERE type = 1
     AND state = 1
-    AND comment_id = #{id}
+    AND comment_id = #{cid}
   </select>
 
   <!-- 与我相关动态评论回复 -->
@@ -142,7 +145,7 @@
     FROM t_feed_comment
     WHERE type = 1
     AND state = 1
-    AND comment_id = #{id}
+    AND comment_id = #{cid}
     ORDER BY create_time DESC
     LIMIT 5
   </select>
