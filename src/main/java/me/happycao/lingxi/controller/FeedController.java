@@ -1,6 +1,6 @@
 package me.happycao.lingxi.controller;
 
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FeedSaveVO;

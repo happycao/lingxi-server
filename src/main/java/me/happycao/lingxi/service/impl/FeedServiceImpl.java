@@ -9,7 +9,7 @@ import me.happycao.lingxi.mapper.TFeedPhotoMapper;
 import me.happycao.lingxi.model.Feed;
 import me.happycao.lingxi.model.PageInfo;
 import me.happycao.lingxi.model.Relevant;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.*;
@@ -56,21 +56,16 @@ public class FeedServiceImpl implements FeedService {
             return result;
         }
 
-        Integer pageNum = feedSearchVO.getPageNum();
-        Integer pageSize = feedSearchVO.getPageSize();
-        pageNum = pageNum == null ? 1 : pageNum;
-        pageNum = pageNum < 1 ? 1 : pageNum;
-        pageSize = pageSize == null ? 10 : pageSize;
-        feedSearchVO.setPageNum(pageNum);
-        feedSearchVO.setPageSize(pageSize);
+        // 分页设置
+        ParamUtil.setPage(feedSearchVO);
 
         Integer total = feedDao.feedTotal(new StateVO(1));
         List<Feed> feedList = feedDao.pageFeed(feedSearchVO);
 
         // 分页数据
         PageInfo<Feed> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(pageNum);
-        pageInfo.setPageSize(pageSize);
+        pageInfo.setPageNum(feedSearchVO.getPageNum());
+        pageInfo.setPageSize(feedSearchVO.getPageSize());
         pageInfo.setTotal(total);
         pageInfo.setList(feedList);
         pageInfo.setSize(feedList == null ? 0 : feedList.size());
@@ -128,21 +123,16 @@ public class FeedServiceImpl implements FeedService {
             return result;
         }
 
-        Integer pageNum = relevantVO.getPageNum();
-        Integer pageSize = relevantVO.getPageSize();
-        pageNum = pageNum == null ? 1 : pageNum;
-        pageNum = pageNum < 1 ? 1 : pageNum;
-        pageSize = pageSize == null ? 10 : pageSize;
-        relevantVO.setPageNum(pageNum);
-        relevantVO.setPageSize(pageSize);
+        // 分页设置
+        ParamUtil.setPage(relevantVO);
 
         Integer total = relevantDao.relevantTotal(new UserIdVO(userId));
         List<Relevant> relevantList = relevantDao.pageRelevant(relevantVO);
 
         // 分页数据
         PageInfo<Relevant> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(pageNum);
-        pageInfo.setPageSize(pageSize);
+        pageInfo.setPageNum(relevantVO.getPageNum());
+        pageInfo.setPageSize(relevantVO.getPageSize());
         pageInfo.setTotal(total);
         pageInfo.setList(relevantList);
         pageInfo.setSize(relevantList == null ? 0 : relevantList.size());
@@ -162,21 +152,16 @@ public class FeedServiceImpl implements FeedService {
             return result;
         }
 
-        Integer pageNum = relevantVO.getPageNum();
-        Integer pageSize = relevantVO.getPageSize();
-        pageNum = pageNum == null ? 1 : pageNum;
-        pageNum = pageNum < 1 ? 1 : pageNum;
-        pageSize = pageSize == null ? 10 : pageSize;
-        relevantVO.setPageNum(pageNum);
-        relevantVO.setPageSize(pageSize);
+        // 分页设置
+        ParamUtil.setPage(relevantVO);
 
         Integer total = relevantDao.mineReplyTotal(new UserIdVO(userId));
         List<Relevant> relevantList = relevantDao.pageMineReply(relevantVO);
 
         // 分页数据
         PageInfo<Relevant> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(pageNum);
-        pageInfo.setPageSize(pageSize);
+        pageInfo.setPageNum(relevantVO.getPageNum());
+        pageInfo.setPageSize(relevantVO.getPageSize());
         pageInfo.setTotal(total);
         pageInfo.setList(relevantList);
         pageInfo.setSize(relevantList == null ? 0 : relevantList.size());

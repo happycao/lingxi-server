@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * author : Bafs
+ * @author : Bafs
  * e-mail : bafs.jy@live.com
  * time   : 2018/05/16
  * desc   : 资源服务相关
@@ -12,9 +12,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RssConfig {
-
-    public static final String PDF = "pdf/";
-    public static final String IMAGE = "image/";
 
     /**
      * windows文件上传目录
@@ -31,13 +28,41 @@ public class RssConfig {
     /**
      * 获取文件上传目录，目前只考虑两种系统
      */
-    public String getUploadPath(){
-        String osName = getOsName();
-        if (osName.toLowerCase().contains("windows")) {
-            return windowsPath;
+    public String getUploadPath() {
+        if (isWindows()) {
+            return windowsPath + getServerPath();
         } else {
-            return linuxPath;
+            return linuxPath + getServerPath();
         }
+    }
+
+    /**
+     * 获取服务目录
+     */
+    private String getServerPath() {
+        return "/lingxi";
+    }
+
+    /**
+     * 用户图片目录
+     */
+    public String getUserPath() {
+        return "/user/";
+    }
+
+    /**
+     * 动态图片目录
+     */
+    public String getFeedPath() {
+        return "/feed/";
+    }
+
+    /**
+     * 当前系统是否为windows
+     */
+    private boolean isWindows() {
+        String osName = getOsName();
+        return osName.toLowerCase().contains("windows");
     }
 
     /**

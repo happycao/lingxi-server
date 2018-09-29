@@ -3,7 +3,7 @@ package me.happycao.lingxi.service.impl;
 import me.happycao.lingxi.entity.TUser;
 import me.happycao.lingxi.mapper.TUserMapper;
 import me.happycao.lingxi.dao.UserDao;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.LoginVO;

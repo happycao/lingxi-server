@@ -1,6 +1,6 @@
 package me.happycao.lingxi.controller;
 
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.RssService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * author : Bafs
+ * @author : Bafs
  * e-mail : bafs.jy@live.com
  * time   : 2018/05/16
  * desc   : 资源服务相关
@@ -25,30 +25,34 @@ public class RssController {
     private RssService mssService;
 
     /**
-     * pdf上传
+     * 用户图片上传
      */
-    @RequestMapping(value = "/pdf", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/image", method = RequestMethod.POST)
     @ResponseBody
     public Result uploadHotelContract(@RequestParam("file") MultipartFile[] files) {
 
-        if (files == null) return Result.paramIsNull();
+        if (files == null) {
+            return Result.paramIsNull();
+        }
 
-        logger.info("/upload/pdf param:" + files.length);
+        logger.info("/user/image param:" + files.length);
 
-        return mssService.uploadPdf(files);
+        return mssService.uploadUserImage(files);
     }
 
     /**
-     * 图片上传
+     * 动态图片上传
      */
-    @RequestMapping(value = "/image", method = RequestMethod.POST)
+    @RequestMapping(value = "/feed/image", method = RequestMethod.POST)
     @ResponseBody
     public Result uploadFeedbackImage(@RequestParam("file") MultipartFile[] files) {
 
-        if (files == null) return Result.paramIsNull();
+        if (files == null) {
+            return Result.paramIsNull();
+        }
 
-        logger.info("/upload/image param:" + files.length);
+        logger.info("/feed/image param:" + files.length);
 
-        return mssService.uploadImage(files);
+        return mssService.uploadFeedImage(files);
     }
 }

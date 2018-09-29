@@ -1,7 +1,7 @@
 package me.happycao.lingxi.exception;
 
 import me.happycao.lingxi.constant.Constant;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,6 +1,6 @@
 package me.happycao.lingxi.service;
 
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -12,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface RssService {
 
-    Result uploadPdf(MultipartFile[] files);
+    Result uploadUserImage(MultipartFile[] files);
 
-    Result uploadImage(MultipartFile[] files);
+    Result uploadFeedImage(MultipartFile[] files);
 }

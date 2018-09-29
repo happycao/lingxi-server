@@ -6,21 +6,23 @@ import me.happycao.lingxi.entity.TFeedComment;
 import me.happycao.lingxi.mapper.TFeedCommentMapper;
 import me.happycao.lingxi.model.Comment;
 import me.happycao.lingxi.model.PageInfo;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedCommentService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FeedCommentVO;
 import me.happycao.lingxi.vo.StateVO;
+import me.happycao.lingxi.vo.UserIdVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
 /**
- * author : Bafs
+ * @author : Bafs
  * e-mail : bafs.jy@live.com
  * time   : 2018/02/05
  * desc   : 动态评论
@@ -37,6 +39,9 @@ public class FeedCommentServiceImpl implements FeedCommentService {
     @Autowired
     private FeedCommentDao feedCommentDao;
 
+    /**
+     * 查询评论分页
+     */
     @Override
     public Result pageFeedComment(FeedCommentVO feedCommentVO) {
         Result result = Result.success();
@@ -48,21 +53,16 @@ public class FeedCommentServiceImpl implements FeedCommentService {
             return result;
         }
 
-        Integer pageNum = feedCommentVO.getPageNum();
-        Integer pageSize = feedCommentVO.getPageSize();
-        pageNum = pageNum == null ? 1 : pageNum;
-        pageNum = pageNum < 1 ? 1 : pageNum;
-        pageSize = pageSize == null ? 10 : pageSize;
-        feedCommentVO.setPageNum(pageNum);
-        feedCommentVO.setPageSize(pageSize);
+        // 分页设置
+        ParamUtil.setPage(feedCommentVO);
 
         Integer total = feedCommentDao.commentTotal(new StateVO(1));
         List<Comment> commentList = feedCommentDao.pageFeedComment(feedCommentVO);
 
         // 分页数据
         PageInfo<Comment> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(pageNum);
-        pageInfo.setPageSize(pageSize);
+        pageInfo.setPageNum(feedCommentVO.getPageNum());
+        pageInfo.setPageSize(feedCommentVO.getPageSize());
         pageInfo.setTotal(total);
         pageInfo.setList(commentList);
         pageInfo.setSize(commentList == null ? 0 : commentList.size());
@@ -71,6 +71,9 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         return result;
     }
 
+    /**
+     * 提交评论
+     */
     @Override
     public Result saveFeedComment(TFeedComment tFeedComment) {
         Result result = Result.success();
@@ -106,6 +109,59 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         tFeedCommentMapper.insertSelective(tFeedComment);
 
         result.setData(tFeedCommentMapper.selectByPrimaryKey(id));
+        return result;
+    }
+
+    /**
+     * 未读评论
+     */
+    @Override
+    public Result unreadReply(UserIdVO userIdVO) {
+        Result result = Result.success();
+
+        String userId = userIdVO.getUserId();
+        if (StringUtils.isEmpty(userId)) {
+            logger.warn("param warn : userId为空");
+            result.setCodeAndMsg(Constant.ERROR_CODE_ID_NULL, "userId为空");
+            return result;
+        }
+
+        Example example = new Example(TFeedComment.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("toUserId", userId);
+        criteria.andEqualTo("isLook", false);
+
+        Integer count = tFeedCommentMapper.selectCountByExample(example);
+
+        result.setData(count);
+        return result;
+    }
+
+    /**
+     * 评论标记已读
+     */
+    @Override
+    public Result updateUnreadReply(UserIdVO userIdVO) {
+        Result result = Result.success();
+
+        String userId = userIdVO.getUserId();
+        if (StringUtils.isEmpty(userId)) {
+            logger.warn("param warn : userId为空");
+            result.setCodeAndMsg(Constant.ERROR_CODE_ID_NULL, "userId为空");
+            return result;
+        }
+
+        TFeedComment param = new TFeedComment();
+        param.setIsLook(true);
+
+        Example example = new Example(TFeedComment.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("toUserId", userId);
+        criteria.andEqualTo("isLook", false);
+
+        Integer state = tFeedCommentMapper.updateByExampleSelective(param, example);
+
+        result.setData(state);
         return result;
     }
 }

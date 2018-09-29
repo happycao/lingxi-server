@@ -1,6 +1,6 @@
 package me.happycao.lingxi.service;
 
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.vo.FeedSaveVO;
 import me.happycao.lingxi.vo.FeedSearchVO;
 import me.happycao.lingxi.vo.IdVO;

@@ -1,7 +1,7 @@
 package me.happycao.lingxi.service;
 
 import me.happycao.lingxi.entity.TUser;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.vo.LoginVO;
 import me.happycao.lingxi.vo.RegisterVO;
 

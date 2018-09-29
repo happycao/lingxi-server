@@ -1,4 +1,4 @@
-package me.happycao.lingxi.model;
+package me.happycao.lingxi.result;
 
 import me.happycao.lingxi.constant.Constant;
 

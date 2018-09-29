@@ -3,7 +3,7 @@ package me.happycao.lingxi.service.impl;
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.entity.TFeedAction;
 import me.happycao.lingxi.mapper.TFeedActionMapper;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedActionService;
 import me.happycao.lingxi.util.ParamUtil;
 import org.slf4j.Logger;

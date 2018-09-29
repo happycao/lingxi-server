@@ -2,7 +2,7 @@ package me.happycao.lingxi.service.impl;
 
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.constant.RssConfig;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.RssService;
 import me.happycao.lingxi.util.ParamUtil;
 import org.slf4j.Logger;
@@ -31,18 +31,22 @@ public class RssServiceImpl implements RssService {
     @Resource
     private RssConfig rssConfig;
 
+    /**
+     * 用户图片上传
+     */
     @Override
-    public Result uploadPdf(MultipartFile[] files) {
-        String[] types = new String[]{".pdf"};
-        return uploadFile(files, RssConfig.PDF, types);
-
-
+    public Result uploadUserImage(MultipartFile[] files) {
+        String[] types = new String[]{".jpg", ".png", ".jpeg"};
+        return uploadFile(files, rssConfig.getUserPath(), types);
     }
 
+    /**
+     * 动态图片上传
+     */
     @Override
-    public Result uploadImage(MultipartFile[] files) {
-        String[] types = new String[]{".jpg", ".png"};
-        return uploadFile(files, RssConfig.IMAGE, types);
+    public Result uploadFeedImage(MultipartFile[] files) {
+        String[] types = new String[]{".jpg", ".jpeg", ".webp", ".png", ".gif"};
+        return uploadFile(files, rssConfig.getFeedPath(), types);
     }
 
     /**
@@ -55,8 +59,7 @@ public class RssServiceImpl implements RssService {
         // 如果通过nginx访问静态资源，可以给域名或ip的拼接路径，或者给相对路径
         // 如：http://localhost:7070/rss/image/20180516001.png，此为完整访问路径
         // 或：/rss/image/20180516001.png，此为相对路径
-        // 我们采用相对路径
-        String baseUrl = "/rss/" + typePath;
+        // 我们采用相对路径即typePath
         List<String> urls = new ArrayList<>();
 
         // 上传目录
@@ -93,7 +96,7 @@ public class RssServiceImpl implements RssService {
             }
 
             // url
-            String url = baseUrl + fileName;
+            String url = typePath + fileName;
             urls.add(url);
         }
 

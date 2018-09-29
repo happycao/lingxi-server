@@ -1,6 +1,6 @@
 package me.happycao.lingxi.service;
 
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 
 /**
  * author : Bafs

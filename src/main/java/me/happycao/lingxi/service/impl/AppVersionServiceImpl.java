@@ -2,7 +2,7 @@ package me.happycao.lingxi.service.impl;
 
 import me.happycao.lingxi.entity.TAppVersion;
 import me.happycao.lingxi.mapper.TAppVersionMapper;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.AppVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

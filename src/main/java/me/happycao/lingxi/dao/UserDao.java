@@ -1,7 +1,6 @@
 package me.happycao.lingxi.dao;
 
 import me.happycao.lingxi.model.User;
-import me.happycao.lingxi.vo.LoginVO;
 
 import java.util.List;
 

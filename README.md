@@ -1,6 +1,10 @@
 ## 关于灵悉
 此代码为灵悉项目服务端代码
 
+[18/09/29更新]  
+1、rss代码更新，同步app服务  
+2、动态评论提醒
+
 Android端查看[灵悉-Android](https://github.com/happycao/lingxi-android)
 
 ## 关于工程
@@ -13,9 +17,9 @@ Android端查看[灵悉-Android](https://github.com/happycao/lingxi-android)
 - Spring Boot内置Web容器，无需另外配置
 - application.yml 中可配置服务端口port、服务路径servlet-path
 - Application类 run 'Application' 即可启动项目
-- 可通过mvn package spring-boot:repackage打包，通过java -jar xxx.jar 启动服务
-- 此版本对应Android APP 1.0.7 版本API，配合使用
-- Android中资源服务使用阿里云oss，在此版服务中并没有，采用上传到本地的方式
+- 可通过mvn clean package打包，通过java -jar xxx.jar 启动服务
+- 此版本对应Android APP 1.0.7 + 版本API，配合使用
+- 资源服务rss文件上传之后，是通过nginx代理的静态资源，此处请自行搜索，不多赘述
 - 没有其他要提醒的了，放心食用吧
 - 心有灵犀一点通
 

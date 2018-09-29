@@ -1,7 +1,7 @@
 package me.happycao.lingxi.controller;
 
 import me.happycao.lingxi.entity.TFeedAction;
-import me.happycao.lingxi.model.Result;
+import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedActionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
