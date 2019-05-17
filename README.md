@@ -5,6 +5,7 @@
 1、引入Swagger2，生成接口文档，[服务启动后访问](http://localhost:8090/lingxi/swagger-ui.html)  
 2、引入dom4j解析xml，加入简单的token校验  
 3、诸多配置项，希望有所收获  
+4、补充，提升fastjson版本号，原因低版本存在漏洞，详见[CVE-2017-18349](https://nvd.nist.gov/vuln/detail/CVE-2017-18349)  
   
 [18/09/29]  
 1、rss代码更新，同步app服务  
