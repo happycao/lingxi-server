@@ -4,7 +4,7 @@
     <!-- spring 配置 -->
     <springProperty scope="context" name="logPath" source="log.path"/>
     <springProperty scope="context" name="logLevel" source="log.level.root"/>
-    <springProperty scope="context" name="active" source="spring.profiles.active"/>
+    <springProperty scope="context" name="logName" source="spring.application.name"/>
 
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -16,13 +16,13 @@
 
     <!-- INFO 日志 -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${logPath}/lx_${active}_info.log</File>
+        <File>${logPath}/${logName}_info.log</File>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logPath}/lx_${active}-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${logPath}/${logName}-info-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>500MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -36,9 +36,9 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
-        <File>${logPath}/lx_${active}_error.log</File>
+        <File>${logPath}/${logName}_error.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logPath}/lx_${active}-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${logPath}/${logName}-error-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>500MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
