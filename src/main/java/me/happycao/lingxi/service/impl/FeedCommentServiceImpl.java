@@ -9,20 +9,20 @@ import me.happycao.lingxi.model.PageInfo;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedCommentService;
 import me.happycao.lingxi.util.ParamUtil;
+import me.happycao.lingxi.vo.FeedCommentSaveVO;
 import me.happycao.lingxi.vo.FeedCommentVO;
-import me.happycao.lingxi.vo.StateVO;
-import me.happycao.lingxi.vo.UserIdVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/02/05
  * desc   : 动态评论
@@ -33,15 +33,12 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private TFeedCommentMapper tFeedCommentMapper;
 
-    @Autowired
+    @Resource
     private FeedCommentDao feedCommentDao;
 
-    /**
-     * 查询评论分页
-     */
     @Override
     public Result pageFeedComment(FeedCommentVO feedCommentVO) {
         Result result = Result.success();
@@ -53,10 +50,10 @@ public class FeedCommentServiceImpl implements FeedCommentService {
             return result;
         }
 
-        // 分页设置
+        // 设置分页
         ParamUtil.setPage(feedCommentVO);
 
-        Integer total = feedCommentDao.commentTotal(new StateVO(1));
+        Integer total = feedCommentDao.commentTotal();
         List<Comment> commentList = feedCommentDao.pageFeedComment(feedCommentVO);
 
         // 分页数据
@@ -72,18 +69,17 @@ public class FeedCommentServiceImpl implements FeedCommentService {
     }
 
     /**
-     * 提交评论
+     * 保存动态评论
      */
     @Override
-    public Result saveFeedComment(TFeedComment tFeedComment) {
+    public Result saveFeedComment(FeedCommentSaveVO feedCommentSaveVO, String userId) {
         Result result = Result.success();
-
-        Integer type = tFeedComment.getType();
-        String feedId = tFeedComment.getFeedId();
-        String userId = tFeedComment.getUserId();
-        String toUserId = tFeedComment.getToUserId();
-        String commentInfo = tFeedComment.getCommentInfo();
-        if (type == null || StringUtils.isEmpty(feedId) || StringUtils.isEmpty(userId)
+        // 参数校验
+        Integer type = feedCommentSaveVO.getType();
+        String feedId = feedCommentSaveVO.getFeedId();
+        String toUserId = feedCommentSaveVO.getToUserId();
+        String commentInfo = feedCommentSaveVO.getCommentInfo();
+        if (type == null || StringUtils.isEmpty(feedId)
                 || StringUtils.isEmpty(toUserId) || StringUtils.isEmpty(commentInfo)) {
             logger.warn("param warn : 必填参数不全");
             result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "必填参数不全");
@@ -92,11 +88,11 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
         // 评论
         if (type == 0) {
-            tFeedComment.setCommentId(null);
+            feedCommentSaveVO.setCommentId(null);
         }
         // 回复
         if (type == 1) {
-            String commentId = tFeedComment.getCommentId();
+            String commentId = feedCommentSaveVO.getCommentId();
             if (StringUtils.isEmpty(commentId)) {
                 logger.warn("param warn : 回复commentId不能为空");
                 result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "回复commentId不能为空");
@@ -104,6 +100,9 @@ public class FeedCommentServiceImpl implements FeedCommentService {
             }
         }
 
+        // 数据转换
+        TFeedComment tFeedComment = new TFeedComment();
+        BeanUtils.copyProperties(feedCommentSaveVO, tFeedComment);
         String id = ParamUtil.getUUID();
         tFeedComment.setId(id);
         tFeedCommentMapper.insertSelective(tFeedComment);
@@ -112,19 +111,9 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         return result;
     }
 
-    /**
-     * 未读评论
-     */
     @Override
-    public Result unreadReply(UserIdVO userIdVO) {
+    public Result unreadReply(String userId) {
         Result result = Result.success();
-
-        String userId = userIdVO.getUserId();
-        if (StringUtils.isEmpty(userId)) {
-            logger.warn("param warn : userId为空");
-            result.setCodeAndMsg(Constant.ERROR_CODE_ID_NULL, "userId为空");
-            return result;
-        }
 
         Example example = new Example(TFeedComment.class);
         Example.Criteria criteria = example.createCriteria();
@@ -137,19 +126,9 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         return result;
     }
 
-    /**
-     * 评论标记已读
-     */
     @Override
-    public Result updateUnreadReply(UserIdVO userIdVO) {
+    public Result updateUnreadReply(String userId) {
         Result result = Result.success();
-
-        String userId = userIdVO.getUserId();
-        if (StringUtils.isEmpty(userId)) {
-            logger.warn("param warn : userId为空");
-            result.setCodeAndMsg(Constant.ERROR_CODE_ID_NULL, "userId为空");
-            return result;
-        }
 
         TFeedComment param = new TFeedComment();
         param.setIsLook(true);

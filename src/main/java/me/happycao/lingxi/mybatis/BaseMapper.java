@@ -4,7 +4,7 @@ import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/04/15
  * desc   : BaseMapper

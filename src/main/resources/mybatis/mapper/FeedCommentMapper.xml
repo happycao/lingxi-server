@@ -22,14 +22,11 @@
     </if>
   </sql>
   <!-- 评论总条数 -->
-  <select id="commentTotal" parameterType="StateVO" resultType="Integer">
+  <select id="commentTotal" resultType="Integer">
     SELECT count(id)
     FROM t_feed_comment
-    <where>
-      <if test="state != null">
-        state = #{state}
-      </if>
-    </where>
+    WHERE type = 0
+    AND state = 1
   </select>
   <!-- 评论字段 -->
   <sql id="Comment_List">

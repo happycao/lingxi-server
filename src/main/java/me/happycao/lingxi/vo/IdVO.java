@@ -1,7 +1,7 @@
 package me.happycao.lingxi.vo;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/02/05
  * desc   : 参数id

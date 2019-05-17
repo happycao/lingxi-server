@@ -1,10 +1,10 @@
 package me.happycao.lingxi.vo;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/04/22
- * desc   : 动态评论
+ * desc   : 动态评论分页
  * version: 1.0
  */
 public class FeedCommentVO extends PageVO {

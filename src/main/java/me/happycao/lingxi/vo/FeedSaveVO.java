@@ -1,19 +1,37 @@
 package me.happycao.lingxi.vo;
 
-import me.happycao.lingxi.entity.TFeed;
-
 import java.util.List;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/04/22
  * desc   : 动态保存参数
  * version: 1.0
  */
-public class FeedSaveVO extends TFeed{
+public class FeedSaveVO {
+
+    private String userId;
+
+    private String feedInfo;
 
     private List<String> photoList;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getFeedInfo() {
+        return feedInfo;
+    }
+
+    public void setFeedInfo(String feedInfo) {
+        this.feedInfo = feedInfo;
+    }
 
     public List<String> getPhotoList() {
         return photoList;
@@ -26,7 +44,8 @@ public class FeedSaveVO extends TFeed{
     @Override
     public String toString() {
         return "FeedSaveVO{" +
-                super.toString() +
+                "userId='" + userId + '\'' +
+                ", feedInfo='" + feedInfo + '\'' +
                 ", photoList=" + photoList +
                 '}';
     }

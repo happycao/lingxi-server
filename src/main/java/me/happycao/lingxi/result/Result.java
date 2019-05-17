@@ -3,6 +3,7 @@ package me.happycao.lingxi.result;
 import me.happycao.lingxi.constant.Constant;
 
 /**
+ * @author happyc
  * 返回参数封装
  */
 public class Result {
@@ -10,6 +11,9 @@ public class Result {
     private String code;
     private String msg;
     private Object data;
+
+    public Result() {
+    }
 
     private Result(String code, String msg) {
         this.code = code;

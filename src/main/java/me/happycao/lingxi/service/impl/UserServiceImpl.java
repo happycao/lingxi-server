@@ -1,21 +1,28 @@
 package me.happycao.lingxi.service.impl;
 
+import me.happycao.lingxi.dao.UserDao;
 import me.happycao.lingxi.entity.TUser;
 import me.happycao.lingxi.mapper.TUserMapper;
-import me.happycao.lingxi.dao.UserDao;
+import me.happycao.lingxi.model.UserToken;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
+import me.happycao.lingxi.util.DigestUtil;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.LoginVO;
 import me.happycao.lingxi.vo.RegisterVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import me.happycao.lingxi.vo.UserSearchVO;
+import me.happycao.lingxi.vo.UserUpdateVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/02/05
  * desc   : 用户相关
@@ -24,10 +31,12 @@ import java.util.Date;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Resource
     private TUserMapper tUserMapper;
 
-    @Autowired
+    @Resource
     private UserDao userDao;
 
     @Override
@@ -69,9 +78,8 @@ public class UserServiceImpl implements UserService {
         tUser.setPhone(registerVO.getPhone());
         tUserMapper.insertSelective(tUser);
 
-        // 因为数据隐蔽性，返回时在如password字段get方法上注解@JsonIgnore
-        // 该字段不会被序列化和反序列化
-        // 或者类上注解@JsonIgnoreProperties({"password"})
+        // 隐藏手机号
+        tUser.setPhone(DigestUtil.markPhone(tUser.getPhone()));
         result.setData(tUser);
         return result;
     }
@@ -92,6 +100,7 @@ public class UserServiceImpl implements UserService {
         param.setUsername(username);
         param.setPassword(password);
         TUser tUser = tUserMapper.selectOne(param);
+
         // 支持手机号登录
         if (tUser == null) {
             param.setUsername(null);
@@ -107,7 +116,13 @@ public class UserServiceImpl implements UserService {
         tUser.setLoginTime(new Date());
         tUserMapper.updateByPrimaryKeySelective(tUser);
 
-        result.setData(tUser);
+        // 生成token
+        UserToken userToken = new UserToken();
+        BeanUtils.copyProperties(tUser, userToken);
+        String token = DigestUtil.generatedToken(tUser.getId(), tUser.getPassword());
+        userToken.setToken(token);
+
+        result.setData(userToken);
         return result;
     }
 
@@ -123,7 +138,7 @@ public class UserServiceImpl implements UserService {
             return result;
         }
 
-        //检查用户存不存在
+        // 检查用户存不存在
         TUser param = new TUser();
         param.setUsername(username);
         param.setPhone(phone);
@@ -135,35 +150,44 @@ public class UserServiceImpl implements UserService {
         tUser.setPassword(password);
         tUserMapper.updateByPrimaryKeySelective(tUser);
 
+        // 隐藏手机号
+        tUser.setPhone(DigestUtil.markPhone(tUser.getPhone()));
+
         result.setData(tUser);
         return result;
     }
 
     @Override
-    public Result updateUser(TUser tUser) {
+    public Result updateUser(UserUpdateVO userUpdateVO, String userId) {
         Result result = Result.success();
 
-        String id = tUser.getId();
-        if (StringUtils.isEmpty(id)) {
-            result.setCodeAndMsg("00103", "id为空");
+        String phone = userUpdateVO.getPhone();
+        String username = userUpdateVO.getUsername();
+        String password = userUpdateVO.getPassword();
+        String qq = userUpdateVO.getQq();
+        String avatar = userUpdateVO.getAvatar();
+        Integer sex = userUpdateVO.getSex();
+        String signature = userUpdateVO.getSignature();
+        if (StringUtils.isEmpty(phone) && StringUtils.isEmpty(username) && StringUtils.isEmpty(password) &&
+                sex == null && StringUtils.isEmpty(qq) && StringUtils.isEmpty(avatar) &&
+                StringUtils.isEmpty(signature)) {
+            result.setCodeAndMsg("00104", "选填参数为空");
             return result;
         }
 
         TUser param = new TUser();
         TUser temp;
         // 检测手机号
-        String phone = tUser.getPhone();
         if (!StringUtils.isEmpty(phone)) {
             param.setPhone(phone);
             temp = tUserMapper.selectOne(param);
             if (temp != null) {
-                result.setCodeAndMsg("00105", "手机号" + phone + "已存在");
+                result.setCodeAndMsg("00105", "手机号" + phone + "已绑定");
                 return result;
             }
         }
         // 检用户名
-        String username = tUser.getUsername();
-        if (!StringUtils.isEmpty(phone)) {
+        if (!StringUtils.isEmpty(username)) {
             param.setPhone(null);
             param.setUsername(username);
             temp = tUserMapper.selectOne(param);
@@ -173,23 +197,74 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        tUser.setUid(null);
-        tUser.setImToken(null);
-        tUserMapper.updateByPrimaryKeySelective(tUser);
+        // 切换数据
+        BeanUtils.copyProperties(userUpdateVO, param);
+        param.setId(userId);
+        tUserMapper.updateByPrimaryKeySelective(param);
 
-        temp = tUserMapper.selectByPrimaryKey(id);
+        temp = tUserMapper.selectByPrimaryKey(userId);
+
+        // 隐藏手机号
+        temp.setPhone(DigestUtil.markPhone(temp.getPhone()));
+
         result.setData(temp);
         return result;
     }
 
     @Override
-    public Result getUser(String id) {
-        return Result.success(tUserMapper.selectByPrimaryKey(id));
+    public Result getUser(String id, String userId) {
+        Result result = Result.success();
+
+        if (StringUtils.isEmpty(id)) {
+            id = userId;
+        }
+
+        TUser tUser = tUserMapper.selectByPrimaryKey(id);
+        if (tUser == null) {
+            result.setCodeAndMsg("00102", "没有该用户");
+            return result;
+        }
+
+        // 隐藏手机号
+        tUser.setPhone(DigestUtil.markPhone(tUser.getPhone()));
+
+        result.setData(tUser);
+        return result;
     }
 
     @Override
     public Result listRcUser() {
         return Result.success(userDao.listRcUser());
+    }
+
+    @Override
+    public Result searchUser(UserSearchVO userSearchVO) {
+        Result result = Result.success();
+
+        TUser tUser = null;
+
+        String username = userSearchVO.getUsername();
+        if (!StringUtils.isEmpty(username)) {
+            TUser param = new TUser();
+            param.setUsername(username);
+            tUser = tUserMapper.selectOne(param);
+        }
+
+        if (tUser == null) {
+            result.setCodeAndMsg("00102", "没有该用户");
+            return result;
+        }
+
+        // 隐藏手机号
+        tUser.setPhone(DigestUtil.markPhone(tUser.getPhone()));
+
+        result.setData(tUser);
+        return result;
+    }
+
+    @Override
+    public TUser userInfo(String id) {
+        return tUserMapper.selectByPrimaryKey(id);
     }
 
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * @author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/05/16
  * desc   : 资源服务相关
@@ -12,6 +12,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class RssConfig {
+
+    /**
+     * 服务路径
+     */
+    @Value("${server.servlet-path}")
+    private String servletPath;
 
     /**
      * windows文件上传目录
@@ -30,17 +36,17 @@ public class RssConfig {
      */
     public String getUploadPath() {
         if (isWindows()) {
-            return windowsPath + getServerPath();
+            return windowsPath + getServletPath();
         } else {
-            return linuxPath + getServerPath();
+            return linuxPath + getServletPath();
         }
     }
 
     /**
      * 获取服务目录
      */
-    private String getServerPath() {
-        return "/lingxi";
+    private String getServletPath() {
+        return servletPath;
     }
 
     /**

@@ -1,13 +1,10 @@
 package me.happycao.lingxi.service;
 
 import me.happycao.lingxi.result.Result;
-import me.happycao.lingxi.vo.FeedSaveVO;
-import me.happycao.lingxi.vo.FeedSearchVO;
-import me.happycao.lingxi.vo.IdVO;
-import me.happycao.lingxi.vo.RelevantVO;
+import me.happycao.lingxi.vo.*;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/02/05
  * desc   : 动态
@@ -15,13 +12,13 @@ import me.happycao.lingxi.vo.RelevantVO;
  */
 public interface FeedService {
 
-    Result pageFeed(FeedSearchVO feedSearchVO);
+    Result pageFeed(FeedSearchVO feedSearchVO, String userId);
 
-    Result saveFeed(FeedSaveVO feedSaveVO);
+    Result saveFeed(FeedSaveVO feedSaveVO, String userId);
 
     Result viewFeed(IdVO idVO);
 
-    Result pageRelevant(RelevantVO relevantVO);
+    Result pageRelevant(RelevantVO relevantVO, String userId);
 
-    Result pageMineReply(RelevantVO relevantVO);
+    Result pageMineReply(RelevantVO relevantVO, String userId);
 }

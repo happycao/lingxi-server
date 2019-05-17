@@ -6,6 +6,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
+/**
+ * @author happyc
+ * 因为数据隐蔽性，返回时在如password字段get方法上注解@JsonIgnore
+ * 该字段不会被序列化和反序列化
+ * 或者类上注解@JsonIgnoreProperties({"password"})
+ */
 @JsonIgnoreProperties({ "password"})
 @Table(name = "t_user")
 public class TUser {
@@ -21,7 +27,7 @@ public class TUser {
 
     private String phone;
 
-    private Integer six;
+    private Integer sex;
 
     private String qq;
 
@@ -77,12 +83,12 @@ public class TUser {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public Integer getSix() {
-        return six;
+    public Integer getSex() {
+        return sex;
     }
 
-    public void setSix(Integer six) {
-        this.six = six;
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
     public String getQq() {

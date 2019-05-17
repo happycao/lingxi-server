@@ -25,12 +25,13 @@
     </if>
   </sql>
   <!-- 动态总条数 -->
-  <select id="feedTotal" parameterType="StateVO" resultType="Integer">
+  <select id="feedTotal" parameterType="FeedSearchVO" resultType="Integer">
     SELECT count(id)
     FROM t_feed
     <where>
-      <if test="state != null">
-        state = #{state}
+      state = 1
+      <if test="searchUserId != null and searchUserId != ''">
+        and user_id = #{searchUserId}
       </if>
     </where>
   </select>

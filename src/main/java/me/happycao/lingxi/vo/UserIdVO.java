@@ -1,7 +1,7 @@
 package me.happycao.lingxi.vo;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/04/23
  * desc   : 用户id参数
@@ -10,6 +10,9 @@ package me.happycao.lingxi.vo;
 public class UserIdVO {
 
     private String userId;
+
+    public UserIdVO() {
+    }
 
     public UserIdVO(String userId) {
         this.userId = userId;

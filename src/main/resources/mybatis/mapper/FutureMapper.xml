@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="me.happycao.lingxi.dao.FutureDao">
+  <resultMap id="FutureMap" type="me.happycao.lingxi.model.Future">
+    <result column="id" jdbcType="VARCHAR" property="id"/>
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="to_mail" jdbcType="VARCHAR" property="toMail" />
+    <result column="future_info" jdbcType="VARCHAR" property="futureInfo" />
+    <result column="days" jdbcType="INTEGER" property="days" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+
+  <!-- 今天需要发送的消息 -->
+  <select id="listFutureToDay" resultMap="FutureMap">
+    SELECT
+      f.id,
+      f.user_id,
+      u.username,
+      f.to_mail,
+      f.future_info,
+      f.days,
+      DATE_FORMAT(
+              f.create_time,
+              '%Y-%m-%d %H:%i:%s'
+      ) create_time
+    FROM
+      t_future f
+      LEFT OUTER JOIN t_user u ON f.user_id = u.id
+    WHERE
+      f.type = 1
+      AND f.state = 1
+      AND DATE_FORMAT(f.show_time, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')
+  </select>
+</mapper>

@@ -7,7 +7,7 @@
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="six" jdbcType="INTEGER" property="six" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
     <result column="qq" jdbcType="VARCHAR" property="qq" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="im_token" jdbcType="VARCHAR" property="imToken" />
@@ -22,9 +22,23 @@
     <result column="im_token" jdbcType="VARCHAR" property="imToken" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, uid, username, password, phone, six, qq, avatar, im_token, login_time, create_time,
+    id, uid, username, password, phone, sex, qq, avatar, im_token, login_time, create_time,
     update_time
   </sql>
+  <!-- 用户列表 -->
+  <select id="listUser" resultMap="TUserMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+  </select>
+
+  <!-- 登录 -->
+  <select id="login" parameterType="LoginVO" resultMap="UserMap">
+    select id, username, avatar, im_token
+    from t_user
+    where username = #{username}
+    and password = #{password}
+  </select>
 
   <!-- 获取最新的uid -->
   <select id="getNewUid" resultType="Integer">

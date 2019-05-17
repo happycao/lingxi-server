@@ -3,21 +3,34 @@ package me.happycao.lingxi.model;
 import java.util.Date;
 import java.util.List;
 
-// 动态
+/**
+ * @author happyc
+ * 动态
+ */
 public class Feed {
 
     private String id;
-    // 用户信息
+    /**
+     * 用户信息
+     */
     private User user;
     private String feedInfo;
     private Integer viewNum;
-    // 评论数
+    /**
+     * 评论数
+     */
     private Integer commentNum;
-    // 当前用户是否点赞
+    /**
+     * 当前用户是否点赞
+     */
     private boolean like;
-    // 点赞列表
+    /**
+     * 点赞列表
+     */
     private List<Like> likeList;
-    // 相册
+    /**
+     * 相册
+     */
     private List<String> photoList;
     private Date createTime;
     private Date updateTime;

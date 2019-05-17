@@ -1,6 +1,7 @@
 package me.happycao.lingxi.constant;
 
 /**
+ * @author happyc
  * 定义常量类
  */
 public class Constant {
@@ -24,5 +25,7 @@ public class Constant {
 
     public static final String ERROR_CODE_PAGE_NULL = "00103";
     public static final String ERROR_MSG_PAGE_NULL = "分页参数为空";
+
+    public static final String DEFAULT_USER_ID = "bef95afda1cf4d42a5e232b5be131f66";
 
 }

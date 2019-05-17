@@ -1,10 +1,10 @@
 package me.happycao.lingxi.vo;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/04/22
- * desc   : 与我相关参数
+ * desc   :
  * version: 1.0
  */
 public class RelevantVO extends PageVO {

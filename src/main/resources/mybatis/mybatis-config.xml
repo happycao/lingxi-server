@@ -14,7 +14,6 @@
 
         <typeAlias alias="IdVO" type="me.happycao.lingxi.vo.IdVO"/>
         <typeAlias alias="UserIdVO" type="me.happycao.lingxi.vo.UserIdVO"/>
-        <typeAlias alias="StateVO" type="me.happycao.lingxi.vo.StateVO"/>
         <typeAlias alias="LoginVO" type="me.happycao.lingxi.vo.LoginVO"/>
         <typeAlias alias="FeedSearchVO" type="me.happycao.lingxi.vo.FeedSearchVO"/>
         <typeAlias alias="FeedCommentVO" type="me.happycao.lingxi.vo.FeedCommentVO"/>

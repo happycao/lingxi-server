@@ -1,7 +1,7 @@
 package me.happycao.lingxi.vo;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/03/02
  * desc   : 动态列表参数
@@ -30,11 +30,10 @@ public class FeedSearchVO extends PageVO {
 
     @Override
     public String toString() {
-        return "FeedSearchVO{" +
-                "pageNum=" + pageNum +
-                ", userId='" + userId + '\'' +
+        return "{" +
+                "searchUserId='" + searchUserId + '\'' +
+                ", pageNum=" + pageNum +
                 ", pageSize=" + pageSize +
-                ", searchUserId='" + searchUserId + '\'' +
                 '}';
     }
 }

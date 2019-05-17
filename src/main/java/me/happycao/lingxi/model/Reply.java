@@ -2,7 +2,10 @@ package me.happycao.lingxi.model;
 
 import java.util.Date;
 
-// 回复
+/**
+ * @author happyc
+ * 回复
+ */
 public class Reply {
 
     private String id;

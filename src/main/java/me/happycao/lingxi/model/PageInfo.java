@@ -3,7 +3,7 @@ package me.happycao.lingxi.model;
 import java.util.List;
 
 /**
- * author : Bafs
+ * @author : happyc
  * e-mail : bafs.jy@live.com
  * time   : 2018/04/22
  * desc   : 分页信息

@@ -1,11 +1,8 @@
 package me.happycao.lingxi.model;
 
 /**
- * author : Bafs
- * e-mail : bafs.jy@live.com
- * time   : 2018/02/05
- * desc   : 用户信息
- * version: 1.0
+ * @author happyc
+ * 用户
  */
 public class User {
 
