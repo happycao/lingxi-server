@@ -57,8 +57,9 @@ public class XmlUtil {
                 if (dl != null) {
                     rssJson.put("flag", 1);
                     for (String property : videoProperty1) {
-                        if ("type".equals(property)) {
-                            if ("伦理".equals(video.elementTextTrim(property))) {
+                        if ("tid".equals(property)) {
+                            String tid = video.elementTextTrim(property);
+                            if ("21".equals(tid) || "26".equals(tid)) {
                                 pass = true;
                             }
                         }
