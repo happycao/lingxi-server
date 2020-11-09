@@ -14,9 +14,11 @@
 
         <typeAlias alias="IdVO" type="me.happycao.lingxi.vo.IdVO"/>
         <typeAlias alias="UserIdVO" type="me.happycao.lingxi.vo.UserIdVO"/>
+        <typeAlias alias="UserSearchVO" type="me.happycao.lingxi.vo.UserSearchVO"/>
         <typeAlias alias="LoginVO" type="me.happycao.lingxi.vo.LoginVO"/>
         <typeAlias alias="FeedSearchVO" type="me.happycao.lingxi.vo.FeedSearchVO"/>
         <typeAlias alias="FeedCommentVO" type="me.happycao.lingxi.vo.FeedCommentVO"/>
         <typeAlias alias="RelevantVO" type="me.happycao.lingxi.vo.RelevantVO"/>
+        <typeAlias alias="NameSearchVO" type="me.happycao.lingxi.vo.NameSearchVO"/>
     </typeAliases>
 </configuration>

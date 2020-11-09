@@ -8,6 +8,7 @@ import me.happycao.lingxi.mapper.*;
 import me.happycao.lingxi.model.Feed;
 import me.happycao.lingxi.model.PageInfo;
 import me.happycao.lingxi.model.Relevant;
+import me.happycao.lingxi.model.Topic;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedService;
 import me.happycao.lingxi.util.ParamUtil;
@@ -22,6 +23,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -168,6 +170,62 @@ public class FeedServiceImpl implements FeedService {
         pageInfo.setTotal(total);
         pageInfo.setList(relevantList);
         pageInfo.setSize(relevantList == null ? 0 : relevantList.size());
+
+        result.setData(pageInfo);
+        return result;
+    }
+
+    /**
+     * 删除动态
+     * @param idVO 参数
+     * @param userId 用户id
+     */
+    @Override
+    public Result removeFeed(IdVO idVO, String userId) {
+        String feedId = idVO.getId();
+        TFeed tFeed = tFeedMapper.selectByPrimaryKey(feedId);
+        if (tFeed == null) {
+            return Result.objIsNull("动态不存在");
+        }
+        Integer state = tFeed.getState();
+        if (state != 1) {
+            return Result.objIsNull("动态不存在或已删除");
+        }
+        String feedUserId = tFeed.getUserId();
+        if (!userId.equals(feedUserId)) {
+            return Result.error("无法操作他人动态");
+        }
+
+        tFeed.setState(2);
+        tFeed.setUpdateTime(new Date());
+        tFeedMapper.updateByPrimaryKeySelective(tFeed);
+        return Result.success();
+    }
+
+    /**
+     * 话题查询
+     */
+    @Override
+    public Result queryTopic(NameSearchVO nameSearchVO) {
+        Result result = Result.success();
+
+        ParamUtil.setPage(nameSearchVO);
+        Integer total = 0;
+        List<Topic> topicList = new ArrayList<>();
+
+        String name = nameSearchVO.getName();
+        if (!StringUtils.isEmpty(name)) {
+            total = feedDao.topicTotal(nameSearchVO);
+            topicList = feedDao.pageTopic(nameSearchVO);
+        }
+
+        // 分页数据
+        PageInfo<Topic> pageInfo = new PageInfo<>();
+        pageInfo.setPageNum(nameSearchVO.getPageNum());
+        pageInfo.setPageSize(nameSearchVO.getPageSize());
+        pageInfo.setTotal(total);
+        pageInfo.setList(topicList);
+        pageInfo.setSize(topicList == null ? 0 : topicList.size());
 
         result.setData(pageInfo);
         return result;

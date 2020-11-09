@@ -21,4 +21,8 @@ public interface FeedService {
     Result pageRelevant(RelevantVO relevantVO, String userId);
 
     Result pageMineReply(RelevantVO relevantVO, String userId);
+
+    Result removeFeed(IdVO idVO, String userId);
+
+    Result queryTopic(NameSearchVO nameSearchVO);
 }

@@ -7,7 +7,7 @@ package me.happycao.lingxi.vo;
  * desc   : 用户查询参数
  * version: 1.0
  */
-public class UserSearchVO {
+public class UserSearchVO extends PageVO {
 
     private String username;
 
@@ -21,8 +21,10 @@ public class UserSearchVO {
 
     @Override
     public String toString() {
-        return "UserSearchVO{" +
+        return "{" +
                 "username='" + username + '\'' +
+                ", pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
                 '}';
     }
 }

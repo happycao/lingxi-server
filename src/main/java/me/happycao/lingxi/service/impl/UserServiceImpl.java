@@ -3,6 +3,8 @@ package me.happycao.lingxi.service.impl;
 import me.happycao.lingxi.dao.UserDao;
 import me.happycao.lingxi.entity.TUser;
 import me.happycao.lingxi.mapper.TUserMapper;
+import me.happycao.lingxi.model.PageInfo;
+import me.happycao.lingxi.model.User;
 import me.happycao.lingxi.model.UserToken;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
@@ -19,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author : happyc
@@ -265,6 +269,32 @@ public class UserServiceImpl implements UserService {
     @Override
     public TUser userInfo(String id) {
         return tUserMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Result queryUser(UserSearchVO userSearchVO) {
+        Result result = Result.success();
+
+        ParamUtil.setPage(userSearchVO);
+        Integer total = 0;
+        List<User> userList = new ArrayList<>();
+
+        String username = userSearchVO.getUsername();
+        if (!StringUtils.isEmpty(username)) {
+            total = userDao.userTotal(userSearchVO);
+            userList = userDao.pageUser(userSearchVO);
+        }
+
+        // 分页数据
+        PageInfo<User> pageInfo = new PageInfo<>();
+        pageInfo.setPageNum(userSearchVO.getPageNum());
+        pageInfo.setPageSize(userSearchVO.getPageSize());
+        pageInfo.setTotal(total);
+        pageInfo.setList(userList);
+        pageInfo.setSize(userList == null ? 0 : userList.size());
+
+        result.setData(pageInfo);
+        return result;
     }
 
 }

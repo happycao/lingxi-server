@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedService;
 import me.happycao.lingxi.util.ParamUtil;
-import me.happycao.lingxi.vo.FeedSaveVO;
-import me.happycao.lingxi.vo.FeedSearchVO;
-import me.happycao.lingxi.vo.IdVO;
-import me.happycao.lingxi.vo.RelevantVO;
+import me.happycao.lingxi.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,5 +157,51 @@ public class FeedController {
         logger.info("param is :" + relevantVO.toString());
 
         return feedService.pageMineReply(relevantVO, userId);
+    }
+
+    /**
+     * 动态删除
+     */
+    @ApiOperation(value = "删除动态", notes = "删除动态")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
+            @ApiImplicitParam(paramType="form", name = "id", value = "动态id", required = true)
+    })
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
+    @ResponseBody
+    public Result removeFeed(IdVO idVO,
+                             @ApiIgnore @RequestAttribute(name = "userId") String userId) {
+
+        if (idVO == null) {
+            return Result.paramIsNull();
+        }
+
+        if (StringUtils.isEmpty(idVO.getId())) {
+            return Result.idIsNull();
+        }
+
+        logger.info("param is :" + idVO.toString());
+
+        return feedService.removeFeed(idVO, userId);
+    }
+
+    /**
+     * 话题查询
+     */
+    @ApiOperation(value = "模糊话题查询", notes = "模糊查询话题接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
+            @ApiImplicitParam(paramType="form", name = "name", value = "话题名", required = true)
+    })
+    @RequestMapping(value = "/topic/query", method = RequestMethod.POST)
+    @ResponseBody
+    public Result queryTopic(NameSearchVO nameSearchVO) {
+        if (nameSearchVO == null) {
+            return Result.paramIsNull();
+        }
+
+        logger.info("param is :" + nameSearchVO.toString());
+
+        return feedService.queryTopic(nameSearchVO);
     }
 }

@@ -21,7 +21,7 @@
   <!-- 分页 -->
   <sql id="page_size">
     <if test="pageNum!=null and pageSize!=null">
-      LIMIT ${pageSize * (pageNum -1)},#{pageSize}
+      LIMIT ${pageSize * (pageNum -1)}, #{pageSize}
     </if>
   </sql>
   <!-- 动态总条数 -->
@@ -121,4 +121,23 @@
     WHERE id = #{id}
   </update>
 
+    <!-- 获取话题条数 -->
+    <select id="topicTotal" parameterType="NameSearchVO" resultType="Integer">
+        SELECT count(0)
+        FROM t_topic
+        where state = 1
+          and type = 1
+          and topic like concat('%', #{name}, '%')
+    </select>
+
+    <!-- 查询话题列表 -->
+    <select id="pageTopic" parameterType="NameSearchVO" resultType="me.happycao.lingxi.model.Topic">
+        select
+         id, topic topicName
+        from t_topic
+        where state = 1
+          and type = 1
+          and topic like concat('%', #{name}, '%')
+        <include refid="page_size"/>
+    </select>
 </mapper>

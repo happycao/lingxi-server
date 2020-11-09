@@ -31,4 +31,6 @@ public interface UserService {
     Result searchUser(UserSearchVO userSearchVO);
 
     TUser userInfo(String id);
+
+    Result queryUser(UserSearchVO userSearchVO);
 }

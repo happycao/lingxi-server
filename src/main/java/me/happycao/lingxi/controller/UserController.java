@@ -130,7 +130,7 @@ public class UserController {
         return userService.listRcUser();
     }
 
-    @ApiOperation(value = "搜索用户", notes = "搜索用户接口")
+    @ApiOperation(value = "精准搜索用户", notes = "精准搜索用户接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
             @ApiImplicitParam(paramType="form", name = "username", value = "用户名", required = true)
@@ -145,6 +145,23 @@ public class UserController {
         logger.info("param is :" + userSearchVO.toString());
 
         return userService.searchUser(userSearchVO);
+    }
+
+    @ApiOperation(value = "模糊查询用户", notes = "模糊查询用户接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
+            @ApiImplicitParam(paramType="form", name = "username", value = "用户名", required = true)
+    })
+    @RequestMapping(value = "/query", method = RequestMethod.POST)
+    @ResponseBody
+    public Result queryUser(UserSearchVO userSearchVO) {
+        if (userSearchVO == null) {
+            return Result.paramIsNull();
+        }
+
+        logger.info("param is :" + userSearchVO.toString());
+
+        return userService.queryUser(userSearchVO);
     }
 
 }
