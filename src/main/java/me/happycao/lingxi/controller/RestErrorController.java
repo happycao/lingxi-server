@@ -16,7 +16,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 public class RestErrorController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "400")
     @ResponseBody

@@ -1,26 +1,19 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/lingxi-server?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
-    username: root
-    password:
-    driver-class-name: com.mysql.jdbc.Driver
+  application:
+    name: lingxi
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   # 静态资源
   resources:
     static-locations: classpath:web/
-  application:
-    name: lingxi
+  profiles:
+    active: '@profilesActive@'
 
 mybatis:
   type-aliases-package: me.happycao.lingxi.model
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
-
-server:
-  port: 8090
-  servlet-path: /lingxi
 
 logging:
   level:
@@ -30,8 +23,8 @@ logging:
 
 # 此地址由nginx代理，即前端访问http://localhost/rss/ 指向 rss-path
 rss-path:
-  windowsPath: D:/Temp/lingxi/upload/
-  linuxPath: /usr/local/lingxi/upload/
+  windowsPath: D:/data/rss
+  linuxPath: /data/html/rss
 
 # 由nginx代理了实际地址，详情搜索资源采集，仅供学习
 inc-cnf:

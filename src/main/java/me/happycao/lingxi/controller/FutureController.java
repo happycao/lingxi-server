@@ -6,12 +6,15 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FutureService;
+import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FutureSaveVO;
+import me.happycao.lingxi.vo.UserIdVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Resource;
 
 /**
  * @author : happyc
@@ -25,12 +28,12 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/future")
 public class FutureController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private FutureService futureService;
 
-    @ApiOperation(value = "写给未来", notes = "写给未来接口")
+    @ApiOperation(value = "保存写给未来", notes = "写给未来接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
             @ApiImplicitParam(paramType="form", name = "type", value = "展示类型，0、app展示，1、mail发送", required = true),
@@ -50,6 +53,30 @@ public class FutureController {
         logger.warn("param is : {}", futureSaveVO.toString());
 
         return futureService.saveFuture(futureSaveVO, userId);
+    }
+
+    @ApiOperation(value = "未来日记列表分页查询", notes = "未来日记列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
+            @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
+            @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
+    })
+    @RequestMapping(value = "/page", method = RequestMethod.POST)
+    @ResponseBody
+    public Result pageFuture(@ApiIgnore UserIdVO userIdVO,
+                             @ApiIgnore @RequestAttribute(name = "userId") String userId) {
+
+        if (userIdVO == null) {
+            return Result.paramIsNull();
+        }
+
+        if (ParamUtil.pageIsNull(userIdVO)) {
+            return Result.pageIsNull();
+        }
+
+        logger.info("param is :" + userIdVO.toString());
+
+        return futureService.pageFuture(userIdVO, userId);
     }
 
 }

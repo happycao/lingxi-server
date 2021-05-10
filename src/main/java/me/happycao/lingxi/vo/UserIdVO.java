@@ -7,11 +7,16 @@ package me.happycao.lingxi.vo;
  * desc   : 用户id参数
  * version: 1.0
  */
-public class UserIdVO {
+public class UserIdVO extends PageVO {
 
     private String userId;
 
     public UserIdVO() {
+    }
+
+    public UserIdVO(PageVO pageVO) {
+        setPageNum(pageVO.getPageNum());
+        setPageSize(pageVO.getPageSize());
     }
 
     public UserIdVO(String userId) {

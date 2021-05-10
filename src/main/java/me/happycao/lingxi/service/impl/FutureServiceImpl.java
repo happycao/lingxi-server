@@ -4,17 +4,20 @@ import me.happycao.lingxi.dao.FutureDao;
 import me.happycao.lingxi.entity.TFuture;
 import me.happycao.lingxi.mapper.TFutureMapper;
 import me.happycao.lingxi.model.Future;
+import me.happycao.lingxi.model.PageInfo;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FutureService;
 import me.happycao.lingxi.util.DateUtil;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FutureSaveVO;
+import me.happycao.lingxi.vo.PageVO;
+import me.happycao.lingxi.vo.UserIdVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -28,12 +31,12 @@ import java.util.List;
 @Service
 public class FutureServiceImpl implements FutureService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private TFutureMapper futureMapper;
 
-    @Autowired
+    @Resource
     private FutureDao futureDao;
 
     @Override
@@ -78,7 +81,6 @@ public class FutureServiceImpl implements FutureService {
             if (endNum == null) {
                 num = startNum;
             }
-
             if (startNum == null) {
                 num = endNum;
             }
@@ -86,7 +88,6 @@ public class FutureServiceImpl implements FutureService {
             if (endNum.equals(startNum)) {
                 num = endNum;
             }
-
             int tmp;
             if (startNum > endNum) {
                 tmp = startNum;
@@ -133,5 +134,23 @@ public class FutureServiceImpl implements FutureService {
         for (TFuture tFuture : tFutureList) {
             futureMapper.updateByPrimaryKeySelective(tFuture);
         }
+    }
+
+    @Override
+    public Result pageFuture(UserIdVO userIdVO, String userId) {
+        Result result = Result.success();
+
+        userIdVO.setUserId(userId);
+        ParamUtil.setPage(userIdVO);
+
+        Integer total = futureDao.futureTotal(userIdVO);
+        List<Future> futureList = futureDao.pageFuture(userIdVO);
+
+        // 分页数据
+        PageInfo<Future> pageInfo = new PageInfo<>();
+        ParamUtil.setPageInfo(pageInfo, userIdVO, total, futureList);
+
+        result.setData(pageInfo);
+        return result;
     }
 }

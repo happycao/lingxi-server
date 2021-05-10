@@ -34,6 +34,7 @@ public class FilterConfiguration {
         registration.addUrlPatterns(servletPath + "/feed/*");
         registration.addUrlPatterns(servletPath + "/rss/*");
         registration.addUrlPatterns(servletPath + "/future/*");
+        registration.addUrlPatterns(servletPath + "/message/*");
 
         registration.setOrder(1);
         return registration;

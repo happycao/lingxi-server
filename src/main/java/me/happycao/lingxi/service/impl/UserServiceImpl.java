@@ -10,10 +10,7 @@ import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.util.DigestUtil;
 import me.happycao.lingxi.util.ParamUtil;
-import me.happycao.lingxi.vo.LoginVO;
-import me.happycao.lingxi.vo.RegisterVO;
-import me.happycao.lingxi.vo.UserSearchVO;
-import me.happycao.lingxi.vo.UserUpdateVO;
+import me.happycao.lingxi.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -113,6 +110,10 @@ public class UserServiceImpl implements UserService {
         }
         if (tUser == null) {
             result.setCodeAndMsg("00104", "用户名或密码错误");
+            return result;
+        }
+        if (tUser.getState() != 1) {
+            result.setCodeAndMsg("00105", "该用户已停用");
             return result;
         }
 

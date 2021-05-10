@@ -8,8 +8,15 @@
     <result column="to_mail" jdbcType="VARCHAR" property="toMail" />
     <result column="future_info" jdbcType="VARCHAR" property="futureInfo" />
     <result column="days" jdbcType="INTEGER" property="days" />
-    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="show_time" jdbcType="TIMESTAMP" property="showTime" />
   </resultMap>
+    <!-- 分页 -->
+    <sql id="page_size">
+        <if test="pageNum!=null and pageSize!=null">
+            LIMIT ${pageSize * (pageNum -1)}, #{pageSize}
+        </if>
+    </sql>
 
   <!-- 今天需要发送的消息 -->
   <select id="listFutureToDay" resultMap="FutureMap">
@@ -20,10 +27,7 @@
       f.to_mail,
       f.future_info,
       f.days,
-      DATE_FORMAT(
-              f.create_time,
-              '%Y-%m-%d %H:%i:%s'
-      ) create_time
+      f.create_time
     FROM
       t_future f
       LEFT OUTER JOIN t_user u ON f.user_id = u.id
@@ -32,4 +36,31 @@
       AND f.state = 1
       AND DATE_FORMAT(f.show_time, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')
   </select>
+
+    <select id="futureTotal" parameterType="UserIdVO" resultType="Integer">
+        SELECT
+            count(1)
+        FROM
+            t_future f
+        WHERE
+            f.type = 0
+          AND f.state = 1
+          <![CDATA[ AND DATE_FORMAT(f.show_time, '%Y%m%d') <= DATE_FORMAT(NOW(), '%Y%m%d') ]]>
+          AND f.user_id = #{userId}
+    </select>
+
+    <!-- 未来日记列表 -->
+    <select id="pageFuture" parameterType="UserIdVO" resultMap="FutureMap">
+        SELECT
+          f.id, f.user_id, f.future_info, f.type, f.to_mail, f.days, f.show_time, f.state, f.create_time, f.update_time
+        FROM
+          t_future f
+        WHERE
+           f.type = 0
+          AND f.state = 1
+          <![CDATA[ AND DATE_FORMAT(f.show_time, '%Y%m%d') <= DATE_FORMAT(NOW(), '%Y%m%d') ]]>
+          AND f.user_id = #{userId}
+          ORDER BY f.show_time DESC
+          <include refid="page_size"/>
+    </select>
 </mapper>

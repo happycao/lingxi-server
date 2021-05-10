@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/lingxi-server?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+
+server:
+  port: 8090
+  servlet-path: /lingxi

@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 @RequestMapping("/inc")
 public class ResourceGatheringController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private ResourceGatheringService resourceGatheringService;

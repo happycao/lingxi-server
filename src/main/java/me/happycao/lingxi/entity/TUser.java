@@ -12,7 +12,7 @@ import java.util.Date;
  * 该字段不会被序列化和反序列化
  * 或者类上注解@JsonIgnoreProperties({"password"})
  */
-@JsonIgnoreProperties({ "password"})
+@JsonIgnoreProperties({ "password", "state"})
 @Table(name = "t_user")
 public class TUser {
 
@@ -36,6 +36,8 @@ public class TUser {
     private String signature;
 
     private String imToken;
+
+    private Integer state;
 
     private Date loginTime;
 
@@ -121,6 +123,14 @@ public class TUser {
 
     public void setImToken(String imToken) {
         this.imToken = imToken == null ? null : imToken.trim();
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public Date getLoginTime() {

@@ -1,13 +1,17 @@
 package me.happycao.lingxi.controller;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.RssService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 /**
  * @author : happyc
@@ -21,9 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/rss/upload")
 public class RssController {
 
-    private static Logger logger = LoggerFactory.getLogger(RssController.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private RssService mssService;
 
     /**

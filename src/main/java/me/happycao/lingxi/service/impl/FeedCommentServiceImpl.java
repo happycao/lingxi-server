@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 public class FeedCommentServiceImpl implements FeedCommentService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFeedCommentMapper tFeedCommentMapper;
@@ -58,11 +58,7 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
         // 分页数据
         PageInfo<Comment> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(feedCommentVO.getPageNum());
-        pageInfo.setPageSize(feedCommentVO.getPageSize());
-        pageInfo.setTotal(total);
-        pageInfo.setList(commentList);
-        pageInfo.setSize(commentList == null ? 0 : commentList.size());
+        ParamUtil.setPageInfo(pageInfo, feedCommentVO, total, commentList);
 
         result.setData(pageInfo);
         return result;
@@ -105,6 +101,7 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         BeanUtils.copyProperties(feedCommentSaveVO, tFeedComment);
         String id = ParamUtil.getUUID();
         tFeedComment.setId(id);
+        tFeedComment.setUserId(userId);
         tFeedCommentMapper.insertSelective(tFeedComment);
 
         result.setData(tFeedCommentMapper.selectByPrimaryKey(id));

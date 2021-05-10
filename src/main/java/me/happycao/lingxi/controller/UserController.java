@@ -10,9 +10,10 @@ import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Resource;
 
 /**
  * @author happyc
@@ -22,9 +23,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/user")
 public class UserController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     @ApiOperation(value = "账号注册", notes = "账号注册接口")
@@ -163,5 +164,4 @@ public class UserController {
 
         return userService.queryUser(userSearchVO);
     }
-
 }

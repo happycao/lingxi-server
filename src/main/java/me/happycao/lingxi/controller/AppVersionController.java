@@ -6,11 +6,12 @@ import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.AppVersionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @author : happyc
@@ -24,9 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/app/version")
 public class AppVersionController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private AppVersionService appVersionService;
 
     @ApiOperation(value = "最新app版本", notes = "获取最新app版本接口")

@@ -25,10 +25,11 @@ public class MultipartConfiguration {
     @Bean
     MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
+        String property = System.getProperty("user.dir");
         String location = rssConfig.getUploadPath() + "/tmp";
         File tmpFile = new File(location);
         if (!tmpFile.exists()) {
-            tmpFile.mkdirs();
+            boolean mkdirs = tmpFile.mkdirs();
         }
         factory.setLocation(location);
         return factory.createMultipartConfig();

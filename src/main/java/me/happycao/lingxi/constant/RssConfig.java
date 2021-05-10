@@ -13,11 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class RssConfig {
 
+    public static final String FORWARD_SLASH = "/";
+
     /**
-     * 服务路径
+     * 服务版本
      */
-    @Value("${server.servlet-path}")
-    private String servletPath;
+    @Value("${spring.profiles.active}")
+    private String active;
 
     /**
      * windows文件上传目录
@@ -36,17 +38,21 @@ public class RssConfig {
      */
     public String getUploadPath() {
         if (isWindows()) {
-            return windowsPath + getServletPath();
+            return windowsPath + getServerPath();
         } else {
-            return linuxPath + getServletPath();
+            return linuxPath + getServerPath();
         }
     }
 
     /**
      * 获取服务目录
      */
-    private String getServletPath() {
-        return servletPath;
+    private String getServerPath() {
+        if (isProd()) {
+            return "/lingxi";
+        } else {
+            return "/lingxi-test";
+        }
     }
 
     /**
@@ -61,6 +67,13 @@ public class RssConfig {
      */
     public String getFeedPath() {
         return "/feed/";
+    }
+
+    /**
+     * 是否为正式版
+     */
+    private boolean isProd() {
+        return "prod".equals(active);
     }
 
     /**

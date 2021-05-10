@@ -4,6 +4,7 @@ import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.constant.RssConfig;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.RssService;
+import me.happycao.lingxi.util.DateUtil;
 import me.happycao.lingxi.util.ParamUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ import java.util.List;
 @Service
 public class RssServiceImpl implements RssService {
 
-    private static Logger logger = LoggerFactory.getLogger(RssServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(RssServiceImpl.class);
 
     @Resource
     private RssConfig rssConfig;
@@ -62,7 +64,8 @@ public class RssServiceImpl implements RssService {
         // 我们采用相对路径即typePath
         List<String> urls = new ArrayList<>();
 
-        // 上传目录
+        // 上传目录 | 新增以年月划分的文件夹，减轻一个文件夹保存文件的压力
+        typePath = typePath + DateUtil.formatYm(new Date()) + RssConfig.FORWARD_SLASH;
         String dirPath = rssConfig.getUploadPath() + typePath;
         logger.warn("upload path : " + dirPath);
 

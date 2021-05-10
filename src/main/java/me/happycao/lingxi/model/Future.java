@@ -1,5 +1,7 @@
 package me.happycao.lingxi.model;
 
+import java.util.Date;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -15,7 +17,8 @@ public class Future {
     private String username;
     private String futureInfo;
     private Integer days;
-    private String createTime;
+    private Date createTime;
+    private Date showTime;
 
     public String getId() {
         return id;
@@ -65,11 +68,19 @@ public class Future {
         this.days = days;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Date getShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(Date showTime) {
+        this.showTime = showTime;
     }
 }

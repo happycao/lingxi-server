@@ -3,6 +3,7 @@ package me.happycao.lingxi.util;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 public final class RestUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(RestUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
@@ -74,12 +75,12 @@ public final class RestUtil {
 
     public static class Builder {
 
-        private HttpMethod method;
+        private final HttpMethod method;
         private boolean isJson;
         private String url;
-        private Map<String, String> headers;
-        private Map<String, String> formParams;
-        private Map<String, List<String>> urlParams;
+        private final Map<String, String> headers;
+        private final Map<String, String> formParams;
+        private final Map<String, List<String>> urlParams;
         private String requestBody;
 
         public Builder(HttpMethod method) {
@@ -196,6 +197,17 @@ public final class RestUtil {
         }
 
         /**
+         * 构建相关设置
+         */
+        private RequestConfig buildRequestConfig(){
+            // 设置请求和传输超时时间
+            return RequestConfig.custom()
+                    .setSocketTimeout(6000)
+                    .setConnectTimeout(6000)
+                    .build();
+        }
+
+        /**
          * 构建HttpClient
          */
         private CloseableHttpClient buildHttpClient() {
@@ -281,6 +293,7 @@ public final class RestUtil {
 
         private <T> T exchangePut(Class<T> bean) {
             HttpPut httpPut = new HttpPut(url);
+            httpPut.setConfig(buildRequestConfig());
             buildHeader(httpPut);
 
             if (isJson) {
@@ -302,6 +315,7 @@ public final class RestUtil {
 
         private <T> T exchangeDelete(Class<T> bean) {
             HttpDelete httpDelete = new HttpDelete(url);
+            httpDelete.setConfig(buildRequestConfig());
             buildHeader(httpDelete);
 
             CloseableHttpClient httpClient = buildHttpClient();
@@ -321,6 +335,7 @@ public final class RestUtil {
          */
         private <T> T exchangePost(Class<T> bean) {
             HttpPost httpPost = new HttpPost(url);
+            httpPost.setConfig(buildRequestConfig());
             buildHeader(httpPost);
 
             if (isJson) {
@@ -345,6 +360,7 @@ public final class RestUtil {
          */
         private <T> T exchangeGet(Class<T> bean) {
             HttpGet httpGet = new HttpGet(url);
+            httpGet.setConfig(buildRequestConfig());
             buildHeader(httpGet);
 
             CloseableHttpClient httpClient = buildHttpClient();

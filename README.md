@@ -1,19 +1,23 @@
 ## 关于灵悉  
 此代码为灵悉项目服务端代码  
-  
-[19/05/18]  
+
+**[21/05/10]**  
+1、发布动态时保存话题和@用户  
+2、修复一些bug  
+
+**[19/05/18]**  
 1、引入Swagger2，生成接口文档，[服务启动后访问](http://localhost:8090/lingxi/swagger-ui.html)  
 2、引入dom4j解析xml，加入简单的token校验  
 3、诸多配置项，希望有所收获  
 4、补充，提升fastjson版本号，原因低版本存在漏洞，详见[CVE-2017-18349](https://nvd.nist.gov/vuln/detail/CVE-2017-18349)  
-  
-[18/09/29]  
+
+**[18/09/29]**  
 1、rss代码更新，同步app服务  
 2、动态评论提醒  
-  
+
 Android端查看[灵悉-Android](https://github.com/happycao/lingxi-android)  
-  
-## 关于工程
+
+## 关于工程  
 - JDK 1.8、Maven 3.2、MySQL 5.7
 - 使用Spring Boot作为核心框架
 - 使用MyBatis
@@ -30,9 +34,9 @@ Android端查看[灵悉-Android](https://github.com/happycao/lingxi-android)
 - 没有其他要提醒的了，放心食用吧
 - 心有灵犀一点通
 
-## 反馈与建议
-- 微博：[iHappyCL](http://weibo.com/374845241)
-- QQ：986417980
-- 交流群：387355490
+## 反馈与建议  
+- QQ：986417980  
+- 交流群：387355490  
   
+
 感谢阅读这份文档。  

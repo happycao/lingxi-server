@@ -15,8 +15,8 @@ import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
@@ -36,7 +36,7 @@ import java.util.List;
 @Service
 public class FeedServiceImpl implements FeedService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFeedMapper tFeedMapper;
@@ -51,7 +51,19 @@ public class FeedServiceImpl implements FeedService {
     private RelevantDao relevantDao;
 
     @Resource
+    private TFeedCommentMapper tFeedCommentMapper;
+
+    @Resource
+    private TTopicMapper tTopicMapper;
+
+    @Resource
+    private TFeedTopicMapper tFeedTopicMapper;
+
+    @Resource
     private TUserMapper tUserMapper;
+
+    @Resource
+    private TFeedAtMapper tFeedAtMapper;
 
     @Override
     public Result pageFeed(FeedSearchVO feedSearchVO, String userId) {
@@ -59,16 +71,13 @@ public class FeedServiceImpl implements FeedService {
 
         ParamUtil.setPage(feedSearchVO);
 
+        feedSearchVO.setUserId(userId);
         Integer total = feedDao.feedTotal(feedSearchVO);
         List<Feed> feedList = feedDao.pageFeed(feedSearchVO);
 
         // 分页数据
         PageInfo<Feed> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(feedSearchVO.getPageNum());
-        pageInfo.setPageSize(feedSearchVO.getPageSize());
-        pageInfo.setTotal(total);
-        pageInfo.setList(feedList);
-        pageInfo.setSize(feedList == null ? 0 : feedList.size());
+        ParamUtil.setPageInfo(pageInfo, feedSearchVO, total, feedList);
 
         result.setData(pageInfo);
         return result;
@@ -76,10 +85,11 @@ public class FeedServiceImpl implements FeedService {
 
     /**
      * 保存用户动态
+     *
      * @param feedSaveVO 用户动态
-     * @param userId 用户id
+     * @param userId     用户id
      */
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
     @Override
     public Result saveFeed(FeedSaveVO feedSaveVO, String userId) {
         Result result = Result.success();
@@ -113,8 +123,94 @@ public class FeedServiceImpl implements FeedService {
             }
         }
 
+        // 处理话题
+        saveTopics(feedInfo, feedId);
+
+        // 处理@
+        saveAts(feedInfo, feedId);
+
         result.setData(tFeedMapper.selectByPrimaryKey(feedId));
         return result;
+    }
+
+    /**
+     * 保存##相关
+     *
+     * @param feedInfo 动态详情
+     * @param feedId   动态id
+     */
+    private void saveTopics(String feedInfo, String feedId) {
+        List<String> topics = ParamUtil.getTopics(feedInfo);
+        List<String> topicIds = new ArrayList<>();
+        if (topics.size() > 0) {
+            Example topicExample = new Example(TTopic.class);
+            Example.Criteria criteria = topicExample.createCriteria();
+            criteria.andEqualTo("type", 1);
+            criteria.andIn("topic", topics);
+            List<TTopic> tTopics = tTopicMapper.selectByExample(topicExample);
+            if (tTopics != null && tTopics.size() > 0) {
+                for (TTopic tTopic : tTopics) {
+                    topics.remove(tTopic.getTopic());
+                    topicIds.add(tTopic.getId());
+                }
+            }
+            if (topics.size() > 0) {
+                for (String topic : topics) {
+                    String topicId = ParamUtil.getUUID();
+                    TTopic tTopic = new TTopic();
+                    tTopic.setId(topicId);
+                    tTopic.setTopic(topic);
+                    tTopic.setType(1);
+                    tTopic.setState(1);
+                    tTopicMapper.insertSelective(tTopic);
+                    topicIds.add(topicId);
+                }
+            }
+        }
+        // 有话题保存关系
+        if (topicIds.size() > 0) {
+            for (String topicId : topicIds) {
+                TFeedTopic tFeedTopic = new TFeedTopic();
+                tFeedTopic.setId(ParamUtil.getUUID());
+                tFeedTopic.setFeedId(feedId);
+                tFeedTopic.setTopicId(topicId);
+                tFeedTopic.setState(1);
+                tFeedTopicMapper.insertSelective(tFeedTopic);
+            }
+        }
+    }
+
+    /**
+     * 保存@相关
+     *
+     * @param feedInfo 动态详情
+     * @param feedId   动态id
+     */
+    private void saveAts(String feedInfo, String feedId) {
+        List<String> ats = ParamUtil.getAts(feedInfo);
+        List<String> atIds = new ArrayList<>();
+        if (ats.size() > 0) {
+            Example atExample = new Example(TUser.class);
+            Example.Criteria criteria = atExample.createCriteria();
+            criteria.andIn("username", ats);
+            List<TUser> tUsers = tUserMapper.selectByExample(atExample);
+            if (tUsers.size() > 0) {
+                for (TUser tUser : tUsers) {
+                    atIds.add(tUser.getId());
+                }
+            }
+        }
+        // 有@保存关系
+        if (atIds.size() > 0) {
+            for (String atId : atIds) {
+                TFeedAt tFeedAt = new TFeedAt();
+                tFeedAt.setId(ParamUtil.getUUID());
+                tFeedAt.setFeedId(feedId);
+                tFeedAt.setAtUserId(atId);
+                tFeedAt.setState(1);
+                tFeedAtMapper.insertSelective(tFeedAt);
+            }
+        }
     }
 
     @Override
@@ -125,13 +221,15 @@ public class FeedServiceImpl implements FeedService {
 
     /**
      * 获取与我相关
+     *
      * @param relevantVO 参数
-     * @param userId 用户id
+     * @param userId     用户id
      */
     @Override
     public Result pageRelevant(RelevantVO relevantVO, String userId) {
         Result result = Result.success();
 
+        relevantVO.setUserId(userId);
         ParamUtil.setPage(relevantVO);
 
         Integer total = relevantDao.relevantTotal(new UserIdVO(userId));
@@ -139,11 +237,7 @@ public class FeedServiceImpl implements FeedService {
 
         // 分页数据
         PageInfo<Relevant> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(relevantVO.getPageNum());
-        pageInfo.setPageSize(relevantVO.getPageSize());
-        pageInfo.setTotal(total);
-        pageInfo.setList(relevantList);
-        pageInfo.setSize(relevantList == null ? 0 : relevantList.size());
+        ParamUtil.setPageInfo(pageInfo, relevantVO, total, relevantList);
 
         result.setData(pageInfo);
         return result;
@@ -151,13 +245,15 @@ public class FeedServiceImpl implements FeedService {
 
     /**
      * 获取我的回复
+     *
      * @param relevantVO 参数
-     * @param userId 用户id
+     * @param userId     用户id
      */
     @Override
     public Result pageMineReply(RelevantVO relevantVO, String userId) {
         Result result = Result.success();
 
+        relevantVO.setUserId(userId);
         ParamUtil.setPage(relevantVO);
 
         Integer total = relevantDao.mineReplyTotal(new UserIdVO(userId));
@@ -165,11 +261,7 @@ public class FeedServiceImpl implements FeedService {
 
         // 分页数据
         PageInfo<Relevant> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(relevantVO.getPageNum());
-        pageInfo.setPageSize(relevantVO.getPageSize());
-        pageInfo.setTotal(total);
-        pageInfo.setList(relevantList);
-        pageInfo.setSize(relevantList == null ? 0 : relevantList.size());
+        ParamUtil.setPageInfo(pageInfo, relevantVO, total, relevantList);
 
         result.setData(pageInfo);
         return result;
@@ -221,11 +313,7 @@ public class FeedServiceImpl implements FeedService {
 
         // 分页数据
         PageInfo<Topic> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(nameSearchVO.getPageNum());
-        pageInfo.setPageSize(nameSearchVO.getPageSize());
-        pageInfo.setTotal(total);
-        pageInfo.setList(topicList);
-        pageInfo.setSize(topicList == null ? 0 : topicList.size());
+        ParamUtil.setPageInfo(pageInfo, nameSearchVO, total, topicList);
 
         result.setData(pageInfo);
         return result;

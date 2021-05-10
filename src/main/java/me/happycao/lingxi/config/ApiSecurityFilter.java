@@ -7,9 +7,9 @@ import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.util.DigestUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,11 +22,11 @@ import java.io.IOException;
 @Component
 public class ApiSecurityFilter implements Filter {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String CONTENT_TYPE_JSON = "application/json;charset=UTF-8";
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     @Override
@@ -37,12 +37,10 @@ public class ApiSecurityFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
-        String requestURI = request.getRequestURI();
-        logger.info("url is :{}", requestURI);
+        String requestUri = request.getRequestURI();
+        logger.info("url is :{}", requestUri);
 
-        boolean notVerify = requestURI.contains("register") || requestURI.contains("reset") || requestURI.contains("login");
-
-        boolean isVerify = requestURI.contains("update") || requestURI.contains("future");
+        boolean notVerify = requestUri.contains("register") || requestUri.contains("reset") || requestUri.contains("login");
 
         if(notVerify) {
             filterChain.doFilter(request, servletResponse);
@@ -61,9 +59,14 @@ public class ApiSecurityFilter implements Filter {
                     if (tUser == null) {
                         isSuccess = false;
                     } else {
-                        // 校验token正确性
-                        String sign = DigestUtil.generatedToken(userId, tUser.getPassword());
-                        isSuccess = sign.equalsIgnoreCase(token);
+                        Integer state = tUser.getState();
+                        if (state != 1) {
+                            isSuccess = false;
+                        } else {
+                            // 校验token正确性
+                            String sign = DigestUtil.generatedToken(userId, tUser.getPassword());
+                            isSuccess = sign.equalsIgnoreCase(token);
+                        }
                     }
                 } else {
                     isSuccess = false;

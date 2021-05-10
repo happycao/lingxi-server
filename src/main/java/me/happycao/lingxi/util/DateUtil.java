@@ -11,9 +11,10 @@ import java.util.*;
  */
 public class DateUtil {
 
-    private static ThreadLocal<Map<String, DateFormat>> formatLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Map<String, DateFormat>> formatLocal = new ThreadLocal<>();
     private static final String PATTERN = "yyyy-MM-dd HH:mm:ss";
     private static final String PATTERN_YMD = "yyyy-MM-dd";
+    private static final String PATTERN_YM = "yyyy-MM";
 
     /**
      * 获取pattern样式的DateFormat 线程安全
@@ -57,6 +58,16 @@ public class DateUtil {
             return null;
         }
         return getFormat(PATTERN_YMD).format(date);
+    }
+
+    /**
+     * 格式化时间
+     */
+    public static String formatYm(Date date) {
+        if (date == null) {
+            return null;
+        }
+        return getFormat(PATTERN_YM).format(date);
     }
 
     /**

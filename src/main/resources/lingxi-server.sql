@@ -11,7 +11,7 @@
  Target Server Version : 50713
  File Encoding         : 65001
 
- Date: 17/05/2019 16:13:33
+ Date: 10/05/2021 21:57:44
 */
 
 SET NAMES utf8mb4;
@@ -22,7 +22,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_app_version`;
 CREATE TABLE `t_app_version`  (
-  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '版本id',
+  `id` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '主键编号',
   `version_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '版本名称',
   `version_code` int(11) NULL DEFAULT NULL COMMENT '版本号',
   `update_flag` int(1) NOT NULL DEFAULT 1 COMMENT '更新标识，1正常、2强制',
@@ -43,7 +43,7 @@ CREATE TABLE `t_feed`  (
   `user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户id',
   `feed_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '动态内容',
   `view_num` int(8) NOT NULL DEFAULT 0 COMMENT '查看数',
-  `state` int(1) NOT NULL DEFAULT 1 COMMENT '数据状态1可用0不可用-1用户删除',
+  `state` int(1) NOT NULL DEFAULT 1 COMMENT '数据状态1可用0不可用2用户删除',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -62,6 +62,21 @@ CREATE TABLE `t_feed_action`  (
   `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '动态点赞' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for t_feed_at
+-- ----------------------------
+DROP TABLE IF EXISTS `t_feed_at`;
+CREATE TABLE `t_feed_at`  (
+  `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'id',
+  `feed_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '动态id',
+  `at_user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '被@用户id',
+  `is_look` tinyint(1) NULL DEFAULT 0 COMMENT '是否已经查看，0未查看1已查看',
+  `state` int(1) NULL DEFAULT 1 COMMENT '数据状态1可用0不可用-1用户删除',
+  `create_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `update_time` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '动态@用户' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for t_feed_comment
@@ -97,6 +112,20 @@ CREATE TABLE `t_feed_photo`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '动态相册表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for t_feed_topic
+-- ----------------------------
+DROP TABLE IF EXISTS `t_feed_topic`;
+CREATE TABLE `t_feed_topic`  (
+  `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `feed_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '动态id',
+  `topic_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '话题id',
+  `state` int(1) NOT NULL DEFAULT 1 COMMENT '状态0不可用1可用',
+  `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '动态话题' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for t_future
 -- ----------------------------
 DROP TABLE IF EXISTS `t_future`;
@@ -115,6 +144,22 @@ CREATE TABLE `t_future`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '写给未来' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for t_topic
+-- ----------------------------
+DROP TABLE IF EXISTS `t_topic`;
+CREATE TABLE `t_topic`  (
+  `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `type` int(1) NULL DEFAULT 1 COMMENT '类型，0属性1话题',
+  `property_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '属性id',
+  `topic` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '话题',
+  `describe_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `state` int(1) NOT NULL DEFAULT 1 COMMENT '状态0不可用1可用',
+  `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+  `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '话题' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for t_user
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user`;
@@ -129,6 +174,7 @@ CREATE TABLE `t_user`  (
   `avatar` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '头像路径',
   `signature` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '个性签名',
   `im_token` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '融云token',
+  `state` int(1) NULL DEFAULT 1 COMMENT '数据状态1可用0不可用',
   `login_time` timestamp(0) NULL COMMENT '登录时间',
   `create_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   `update_time` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',

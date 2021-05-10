@@ -9,9 +9,10 @@ import me.happycao.lingxi.service.FeedActionService;
 import me.happycao.lingxi.vo.FeedActionVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Resource;
 
 /**
  * @author : happyc
@@ -25,9 +26,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/feed/action")
 public class FeedActionController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private FeedActionService feedActionService;
 
     @ApiOperation(value = "动态操作", notes = "动态喜欢|收藏接口")

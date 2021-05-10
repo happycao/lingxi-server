@@ -4,6 +4,8 @@ import me.happycao.lingxi.entity.TFuture;
 import me.happycao.lingxi.model.Future;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.vo.FutureSaveVO;
+import me.happycao.lingxi.vo.PageVO;
+import me.happycao.lingxi.vo.UserIdVO;
 
 import java.util.List;
 
@@ -23,4 +25,6 @@ public interface FutureService {
     void sendFuture(Future future);
 
     void updateFutureList(List<TFuture> tFutureList);
+
+    Result pageFuture(UserIdVO userIdVO, String userId);
 }

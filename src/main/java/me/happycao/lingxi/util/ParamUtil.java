@@ -1,5 +1,6 @@
 package me.happycao.lingxi.util;
 
+import me.happycao.lingxi.model.PageInfo;
 import me.happycao.lingxi.vo.PageVO;
 
 import java.util.*;
@@ -50,6 +51,14 @@ public class ParamUtil {
         pageSize = pageSize == null ? 10 : pageSize;
         pageVO.setPageNum(pageNum);
         pageVO.setPageSize(pageSize);
+    }
+
+    public static <T> void setPageInfo(PageInfo<T> pageInfo, PageVO pageVO, Integer total, List<T> list) {
+        pageInfo.setPageNum(pageVO.getPageNum());
+        pageInfo.setPageSize(pageVO.getPageSize());
+        pageInfo.setTotal(total);
+        pageInfo.setList(list);
+        pageInfo.setSize(list == null ? 0 : list.size());
     }
 
     /**

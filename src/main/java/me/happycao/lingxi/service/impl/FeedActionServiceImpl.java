@@ -24,7 +24,7 @@ import javax.annotation.Resource;
 @Service
 public class FeedActionServiceImpl implements FeedActionService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFeedActionMapper tFeedActionMapper;

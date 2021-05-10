@@ -28,7 +28,7 @@ import javax.annotation.Resource;
 @RequestMapping("/feed/comment")
 public class FeedCommentController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private FeedCommentService feedCommentService;

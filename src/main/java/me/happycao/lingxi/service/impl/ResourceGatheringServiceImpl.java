@@ -26,29 +26,16 @@ public class ResourceGatheringServiceImpl implements ResourceGatheringService {
     @Value("${inc-cnf.apiUrl}")
     private String incUrl;
 
-    /**
-     * 直接转json
-     * 优点：不需要针对key做处理
-     * 缺点：无法区分Array和Object
-     */
     @Override
     public JSONObject directApi(IncVO incVO) {
         return getData(incVO, 1);
     }
 
-    /**
-     * 解析转json
-     * 优点：定制化
-     * 缺点：需要对所有key做适配
-     */
     @Override
     public JSONObject parseApi(IncVO incVO) {
         return getData(incVO, 2);
     }
 
-    /**
-     * xml转json具体实现
-     */
     private JSONObject getData(IncVO incVO, Integer flag) {
         if (incVO == null) {
             incVO = new IncVO();
@@ -59,6 +46,7 @@ public class ResourceGatheringServiceImpl implements ResourceGatheringService {
 
         String content = RestUtil.doGet()
                 .url(incUrl)
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:50.0) Gecko/20100101 Firefox/50.0")
                 .addUrlParam("ac", incVO.getAc())
                 .addUrlParam("h", incVO.getH())
                 .addUrlParam("pg", incVO.getPg())

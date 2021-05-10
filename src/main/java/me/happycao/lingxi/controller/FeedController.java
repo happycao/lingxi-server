@@ -10,10 +10,11 @@ import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.annotation.Resource;
 
 /**
  * @author happyc
@@ -24,9 +25,9 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/feed")
 public class FeedController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @Resource
     private FeedService feedService;
 
     /**
