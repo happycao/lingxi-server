@@ -25,7 +25,7 @@
         <mysql.version>5.1.38</mysql.version>
         <swagger2.version>2.6.1</swagger2.version>
         <httpclient.version>4.5.5</httpclient.version>
-        <fastjson.version>1.2.41</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
     </properties>
 
     <dependencies>
