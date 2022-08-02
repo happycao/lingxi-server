@@ -58,7 +58,9 @@
         SELECT count(0)
         FROM t_user
         where state = 1
-          and username like concat('%', #{username}, '%')
+          <if test="username != null and username != ''">
+              and username like concat('%', #{username}, '%')
+          </if>
     </select>
 
     <!-- 查询用户列表 -->
@@ -67,7 +69,9 @@
         <include refid="Base_Column_List"/>
         from t_user
         where state = 1
-          and username like concat('%', #{username}, '%')
+          <if test="username != null and username != ''">
+              and username like concat('%', #{username}, '%')
+          </if>
         order by login_time desc
         <include refid="page_size"/>
     </select>

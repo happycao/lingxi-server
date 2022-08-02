@@ -38,7 +38,8 @@ public class FeedController {
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
             @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
             @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
-            @ApiImplicitParam(paramType="form", name = "searchUserId", value = "查询用户id")
+            @ApiImplicitParam(paramType="form", name = "searchUserId", value = "查询用户id"),
+            @ApiImplicitParam(paramType="form", name = "topicId", value = "话题id")
     })
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody

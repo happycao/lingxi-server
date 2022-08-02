@@ -10,7 +10,10 @@ import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.util.DigestUtil;
 import me.happycao.lingxi.util.ParamUtil;
-import me.happycao.lingxi.vo.*;
+import me.happycao.lingxi.vo.LoginVO;
+import me.happycao.lingxi.vo.RegisterVO;
+import me.happycao.lingxi.vo.UserSearchVO;
+import me.happycao.lingxi.vo.UserUpdateVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -277,22 +279,13 @@ public class UserServiceImpl implements UserService {
         Result result = Result.success();
 
         ParamUtil.setPage(userSearchVO);
-        Integer total = 0;
-        List<User> userList = new ArrayList<>();
 
-        String username = userSearchVO.getUsername();
-        if (!StringUtils.isEmpty(username)) {
-            total = userDao.userTotal(userSearchVO);
-            userList = userDao.pageUser(userSearchVO);
-        }
+        Integer total = userDao.userTotal(userSearchVO);
+        List<User> userList = userDao.pageUser(userSearchVO);
 
         // 分页数据
         PageInfo<User> pageInfo = new PageInfo<>();
-        pageInfo.setPageNum(userSearchVO.getPageNum());
-        pageInfo.setPageSize(userSearchVO.getPageSize());
-        pageInfo.setTotal(total);
-        pageInfo.setList(userList);
-        pageInfo.setSize(userList == null ? 0 : userList.size());
+        ParamUtil.setPageInfo(pageInfo, userSearchVO, total, userList);
 
         result.setData(pageInfo);
         return result;

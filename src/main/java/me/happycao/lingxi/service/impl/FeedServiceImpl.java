@@ -302,14 +302,9 @@ public class FeedServiceImpl implements FeedService {
         Result result = Result.success();
 
         ParamUtil.setPage(nameSearchVO);
-        Integer total = 0;
-        List<Topic> topicList = new ArrayList<>();
 
-        String name = nameSearchVO.getName();
-        if (!StringUtils.isEmpty(name)) {
-            total = feedDao.topicTotal(nameSearchVO);
-            topicList = feedDao.pageTopic(nameSearchVO);
-        }
+        Integer total = feedDao.topicTotal(nameSearchVO);
+        List<Topic> topicList = feedDao.pageTopic(nameSearchVO);
 
         // 分页数据
         PageInfo<Topic> pageInfo = new PageInfo<>();
