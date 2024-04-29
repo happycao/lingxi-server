@@ -36,13 +36,13 @@ public class ApiSecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
         String requestUri = request.getRequestURI();
         logger.info("url is :{}", requestUri);
 
         boolean notVerify = requestUri.contains("register") || requestUri.contains("reset") || requestUri.contains("login");
 
-        if(notVerify) {
+        if (notVerify) {
             filterChain.doFilter(request, servletResponse);
         } else {
             // 安全认证
@@ -94,4 +94,5 @@ public class ApiSecurityFilter implements Filter {
         response.setContentType(CONTENT_TYPE_JSON);
         response.getWriter().print(JSON.toJSONString(Result.error("00403", "安全验证失败")));
     }
+
 }

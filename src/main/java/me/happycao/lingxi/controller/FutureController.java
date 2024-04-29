@@ -36,11 +36,11 @@ public class FutureController {
     @ApiOperation(value = "保存写给未来", notes = "写给未来接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "type", value = "展示类型，0、app展示，1、mail发送", required = true),
-            @ApiImplicitParam(paramType="form", name = "mail", value = "邮箱,type为1校验"),
-            @ApiImplicitParam(paramType="form", name = "futureInfo", value = "内容", required = true),
-            @ApiImplicitParam(paramType="form", name = "startNum", value = "展示区间开始值，如1个月", required = true),
-            @ApiImplicitParam(paramType="form", name = "endNum", value = "展示区间结束值，如10个月")
+            @ApiImplicitParam(paramType="query", name = "type", value = "展示类型，0、app展示，1、mail发送", required = true),
+            @ApiImplicitParam(paramType="query", name = "mail", value = "邮箱,type为1校验"),
+            @ApiImplicitParam(paramType="query", name = "futureInfo", value = "内容", required = true),
+            @ApiImplicitParam(paramType="query", name = "startNum", value = "展示区间开始值，如1个月", required = true),
+            @ApiImplicitParam(paramType="query", name = "endNum", value = "展示区间结束值，如10个月")
     })
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
@@ -58,8 +58,8 @@ public class FutureController {
     @ApiOperation(value = "未来日记列表分页查询", notes = "未来日记列表")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
-            @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
+            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
+            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
     })
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody

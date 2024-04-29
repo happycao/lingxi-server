@@ -20,24 +20,21 @@ public class FilterConfiguration {
     @Resource
     private ApiSecurityFilter apiSecurityFilter;
 
-    @Value("${server.servlet-path}")
-    private String servletPath;
-
     @Bean
-    public FilterRegistrationBean filterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
+    public FilterRegistrationBean<ApiSecurityFilter> apiSecurityFilterRegistration() {
+        FilterRegistrationBean<ApiSecurityFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(apiSecurityFilter);
         registration.setName("apiSecurityFilter");
 
         // 拦截规则
-        registration.addUrlPatterns(servletPath + "/user/*");
-        registration.addUrlPatterns(servletPath + "/feed/*");
-        registration.addUrlPatterns(servletPath + "/rss/*");
-        registration.addUrlPatterns(servletPath + "/future/*");
-        registration.addUrlPatterns(servletPath + "/topic/*");
-        registration.addUrlPatterns(servletPath + "/message/*");
+        registration.addUrlPatterns("/user/*");
+        registration.addUrlPatterns("/feed/*");
+        registration.addUrlPatterns("/rss/*");
+        registration.addUrlPatterns("/future/*");
+        registration.addUrlPatterns("/topic/*");
+        registration.addUrlPatterns("/message/*");
 
-        registration.setOrder(1);
+        registration.setOrder(2);
         return registration;
     }
 }

@@ -36,7 +36,7 @@ public class RssController {
     @ApiOperation(value = "用户图片上传", notes = "用户图片上传接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "file", value = "图片文件 - 不可测试", required = true, dataType = "File", allowMultiple = true)
+            @ApiImplicitParam(paramType="query", name = "file", value = "图片文件 - 不可测试", required = true, dataType = "File", allowMultiple = true)
     })
     @RequestMapping(value = "/user/image", method = RequestMethod.POST)
     @ResponseBody
@@ -57,7 +57,7 @@ public class RssController {
     @ApiOperation(value = "动态图片上传", notes = "动态图片上传接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "file", value = "图片文件 - 不可测试", required = true, dataType = "File", allowMultiple = true)
+            @ApiImplicitParam(paramType="query", name = "file", value = "图片文件 - 不可测试", required = true, dataType = "File", allowMultiple = true)
     })
     @RequestMapping(value = "/feed/image", method = RequestMethod.POST)
     @ResponseBody

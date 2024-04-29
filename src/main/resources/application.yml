@@ -4,11 +4,24 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-  # 静态资源
-  resources:
-    static-locations: classpath:web/
   profiles:
     active: '@profilesActive@'
+  # swagger2兼容
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # db
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 50
+      max-wait: 3000
+      validation-query: "SELECT 1"
+      login-timeout: 30000
+      break-after-acquire-failure: true
+      connection-error-retry-attempts: 3
 
 mybatis:
   type-aliases-package: me.happycao.lingxi.model
@@ -18,13 +31,15 @@ mybatis:
 logging:
   level:
     root: info
-  path: log
+  file:
+    path: log
   config: classpath:logback-spring.xml
 
 # 此地址由nginx代理，即前端访问http://localhost/rss/ 指向 rss-path
 rss-path:
   windowsPath: D:/data/rss
-  linuxPath: /data/html/rss
+  # /data/html/rss
+  linuxPath: /usr/local/var/www/rss
 
 # 由nginx代理了实际地址，详情搜索资源采集，仅供学习
 inc-cnf:

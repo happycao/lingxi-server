@@ -36,10 +36,10 @@ public class FeedController {
     @ApiOperation(value = "分页动态", notes = "分页动态接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
-            @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
-            @ApiImplicitParam(paramType="form", name = "searchUserId", value = "查询用户id"),
-            @ApiImplicitParam(paramType="form", name = "topicId", value = "话题id")
+            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
+            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
+            @ApiImplicitParam(paramType="query", name = "searchUserId", value = "查询用户id"),
+            @ApiImplicitParam(paramType="query", name = "topicId", value = "话题id")
     })
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody
@@ -65,7 +65,7 @@ public class FeedController {
     @ApiOperation(value = "发布动态", notes = "发布动态接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "feedInfo", value = "动态内容", required = true),
+            @ApiImplicitParam(paramType="query", name = "feedInfo", value = "动态内容", required = true),
             @ApiImplicitParam(paramType="query", name = "photoList", value = "图片列表 - 测试建议忽略")
     })
     @RequestMapping(value = "/save", method = RequestMethod.POST)
@@ -88,7 +88,7 @@ public class FeedController {
     @ApiOperation(value = "动态查看数+1", notes = "动态查看数+1接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "id", value = "动态id", required = true)
+            @ApiImplicitParam(paramType="query", name = "id", value = "动态id", required = true)
     })
     @RequestMapping(value = "/view", method = RequestMethod.POST)
     @ResponseBody
@@ -113,8 +113,8 @@ public class FeedController {
     @ApiOperation(value = "与我相关", notes = "与我相关接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
-            @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10")
+            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
+            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, defaultValue = "10")
     })
     @RequestMapping(value = "/relevant", method = RequestMethod.POST)
     @ResponseBody
@@ -140,8 +140,8 @@ public class FeedController {
     @ApiOperation(value = "我的回复", notes = "我的回复接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
-            @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10")
+            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
+            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, defaultValue = "10")
     })
     @RequestMapping(value = "/mine/reply", method = RequestMethod.POST)
     @ResponseBody
@@ -167,7 +167,7 @@ public class FeedController {
     @ApiOperation(value = "删除动态", notes = "删除动态")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "id", value = "动态id", required = true)
+            @ApiImplicitParam(paramType="query", name = "id", value = "动态id", required = true)
     })
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @ResponseBody
@@ -193,7 +193,7 @@ public class FeedController {
     @ApiOperation(value = "模糊话题查询", notes = "模糊查询话题接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "name", value = "话题名", required = true)
+            @ApiImplicitParam(paramType="query", name = "name", value = "话题名", required = true)
     })
     @RequestMapping(value = "/topic/query", method = RequestMethod.POST)
     @ResponseBody

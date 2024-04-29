@@ -1,16 +1,18 @@
 package me.happycao.lingxi;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * @author happyc
  */
 @SpringBootApplication
+@ServletComponentScan
 @EnableTransactionManagement
 @EnableScheduling
 @MapperScan(basePackages = {"me.happycao.lingxi.mapper", "me.happycao.lingxi.dao"})

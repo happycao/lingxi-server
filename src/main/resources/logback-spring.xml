@@ -2,8 +2,8 @@
 <configuration scan="true" scanPeriod="10 seconds">
 
     <!-- spring 配置 -->
-    <springProperty scope="context" name="logPath" source="log.path"/>
-    <springProperty scope="context" name="logLevel" source="log.level.root"/>
+    <springProperty scope="context" name="logPath" source="logging.file.path"/>
+    <springProperty scope="context" name="logLevel" source="logging.level.root"/>
     <springProperty scope="context" name="active" source="spring.profiles.active"/>
 
     <!-- 控制台输出 -->

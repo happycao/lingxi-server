@@ -6,13 +6,13 @@
 
     <groupId>me.happycao.lingxi</groupId>
     <artifactId>lingxi-server</artifactId>
-    <version>${jarVersion}</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.13.RELEASE</version>
+        <version>2.7.6</version>
         <relativePath/>
     </parent>
 
@@ -22,10 +22,10 @@
         <skipTests>true</skipTests>
         <java.version>1.8</java.version>
         <projectVersion>1.0</projectVersion>
-        <mybatis.version>1.3.1</mybatis.version>
-        <tk.version>1.1.0</tk.version>
+        <mybatis.version>2.1.3</mybatis.version>
+        <tk.version>2.1.5</tk.version>
         <mysql.version>8.0.28</mysql.version>
-        <swagger2.version>2.6.1</swagger2.version>
+        <swagger2.version>2.9.2</swagger2.version>
         <httpclient.version>4.5.13</httpclient.version>
         <fastjson.version>1.2.83</fastjson.version>
     </properties>
@@ -37,37 +37,29 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- 打包war使用,移除内置tomcat -->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
         <!-- mybatis -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>${mybatis.version}</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>${tk.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>HikariCP</artifactId>
+                    <groupId>com.zaxxer</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.20</version>
         </dependency>
 
         <!-- mysql -->
@@ -78,10 +70,10 @@
         </dependency>
 
         <!-- redis -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
+        </dependency>-->
 
         <!-- swagger2 -->
         <dependency>
@@ -102,19 +94,16 @@
             <version>${fastjson.version}</version>
         </dependency>
 
-        <!-- rc -->
-        <!-- https://github.com/rongcloud/server-sdk-java -->
-        <dependency>
-            <groupId>cn.rongcloud.im</groupId>
-            <artifactId>server-sdk-java</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-
         <!-- mail -->
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>1.4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- httpClient start -->
@@ -136,6 +125,19 @@
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>2.1.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -170,6 +172,7 @@
     </profiles>
 
     <build>
+        <finalName>${artifactId}-${jarVersion}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

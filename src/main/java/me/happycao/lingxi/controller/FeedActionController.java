@@ -34,8 +34,8 @@ public class FeedActionController {
     @ApiOperation(value = "动态操作", notes = "动态喜欢|收藏接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType = "form", name = "type", value = "操作类型，0点赞1收藏", required = true),
-            @ApiImplicitParam(paramType = "form", name = "feedId", value = "动态id", required = true)
+            @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型，0点赞1收藏", required = true),
+            @ApiImplicitParam(paramType = "query", name = "feedId", value = "动态id", required = true)
     })
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody

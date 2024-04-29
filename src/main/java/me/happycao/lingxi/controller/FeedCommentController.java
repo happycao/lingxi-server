@@ -36,9 +36,9 @@ public class FeedCommentController {
     @ApiOperation(value = "分页动态评论", notes = "分页动态评论接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
-            @ApiImplicitParam(paramType="form", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
-            @ApiImplicitParam(paramType="form", name = "feedId", value = "动态id", required = true)
+            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
+            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
+            @ApiImplicitParam(paramType="query", name = "feedId", value = "动态id", required = true)
     })
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody
@@ -60,11 +60,11 @@ public class FeedCommentController {
     @ApiOperation(value = "动态评论回复", notes = "动态评论回复接口")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="form", name = "type", value = "类型，0评论1回复", required = true),
-            @ApiImplicitParam(paramType="form", name = "feedId", value = "动态id", required = true),
-            @ApiImplicitParam(paramType="form", name = "commentId", value = "评论id", required = true),
-            @ApiImplicitParam(paramType="form", name = "toUserId", value = "被评论|回复用户id", required = true),
-            @ApiImplicitParam(paramType="form", name = "commentInfo", value = "评论|回复内容", required = true)
+            @ApiImplicitParam(paramType="query", name = "type", value = "类型，0评论1回复", required = true),
+            @ApiImplicitParam(paramType="query", name = "feedId", value = "动态id", required = true),
+            @ApiImplicitParam(paramType="query", name = "commentId", value = "评论id", required = true),
+            @ApiImplicitParam(paramType="query", name = "toUserId", value = "被评论|回复用户id", required = true),
+            @ApiImplicitParam(paramType="query", name = "commentInfo", value = "评论|回复内容", required = true)
     })
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody

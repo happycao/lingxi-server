@@ -78,12 +78,13 @@
 
   <!-- 与我相关列表 -->
   <select id="pageRelevant" parameterType="RelevantVO" resultMap="RelevantMap">
-    SELECT DISTINCT IFNULL(comment_id, id) cid, feed_id, user_id, to_user_id
+    SELECT DISTINCT IFNULL(comment_id, id) cid, ANY_VALUE(feed_id) feed_id,
+        ANY_VALUE(user_id) user_id, ANY_VALUE(to_user_id) to_user_id
     FROM t_feed_comment
     WHERE state = 1
     AND to_user_id = #{userId}
     GROUP BY cid
-    ORDER BY create_time DESC
+    ORDER BY ANY_VALUE(create_time) DESC
     <include refid="page_size"/>
   </select>
 
@@ -100,11 +101,12 @@
 
   <!-- 我的回复列表 -->
   <select id="pageMineReply" parameterType="RelevantVO" resultMap="RelevantMap">
-    SELECT DISTINCT IFNULL(comment_id, id) cid, feed_id, user_id, to_user_id
+    SELECT DISTINCT IFNULL(comment_id, id) cid, ANY_VALUE(feed_id) feed_id,
+        ANY_VALUE(user_id) user_id, ANY_VALUE(to_user_id) to_user_id
     FROM t_feed_comment
     WHERE state = 1
     AND user_id = #{userId}
-    ORDER BY create_time DESC
+    ORDER BY ANY_VALUE(create_time) DESC
     <include refid="page_size"/>
   </select>
 
