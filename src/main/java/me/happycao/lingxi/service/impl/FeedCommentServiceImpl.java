@@ -1,5 +1,6 @@
 package me.happycao.lingxi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.dao.FeedCommentDao;
 import me.happycao.lingxi.entity.TFeedComment;
@@ -11,11 +12,9 @@ import me.happycao.lingxi.service.FeedCommentService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FeedCommentSaveVO;
 import me.happycao.lingxi.vo.FeedCommentVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -28,10 +27,9 @@ import java.util.List;
  * desc   : 动态评论
  * version: 1.0
  */
+@Slf4j
 @Service
 public class FeedCommentServiceImpl implements FeedCommentService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFeedCommentMapper tFeedCommentMapper;
@@ -45,7 +43,7 @@ public class FeedCommentServiceImpl implements FeedCommentService {
 
         String feedId = feedCommentVO.getFeedId();
         if (StringUtils.isEmpty(feedId)) {
-            logger.warn("param warn : feedId为空");
+            log.warn("param warn : feedId为空");
             result.setCodeAndMsg(Constant.ERROR_CODE_ID_NULL, "feedId为空");
             return result;
         }
@@ -77,7 +75,7 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         String commentInfo = feedCommentSaveVO.getCommentInfo();
         if (type == null || StringUtils.isEmpty(feedId)
                 || StringUtils.isEmpty(toUserId) || StringUtils.isEmpty(commentInfo)) {
-            logger.warn("param warn : 必填参数不全");
+            log.warn("param warn : 必填参数不全");
             result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "必填参数不全");
             return result;
         }
@@ -90,7 +88,7 @@ public class FeedCommentServiceImpl implements FeedCommentService {
         if (type == 1) {
             String commentId = feedCommentSaveVO.getCommentId();
             if (StringUtils.isEmpty(commentId)) {
-                logger.warn("param warn : 回复commentId不能为空");
+                log.warn("param warn : 回复commentId不能为空");
                 result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "回复commentId不能为空");
                 return result;
             }

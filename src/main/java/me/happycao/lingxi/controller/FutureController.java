@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FutureService;
 import me.happycao.lingxi.util.ParamUtil;
@@ -23,24 +24,23 @@ import javax.annotation.Resource;
  * desc   : 写给未来
  * version: 1.0
  */
+@Slf4j
 @Api(tags = "07-future", value = "FutureApi", description = "写给未来接口")
 @RestController
 @RequestMapping("/future")
 public class FutureController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private FutureService futureService;
 
     @ApiOperation(value = "保存写给未来", notes = "写给未来接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "type", value = "展示类型，0、app展示，1、mail发送", required = true),
-            @ApiImplicitParam(paramType="query", name = "mail", value = "邮箱,type为1校验"),
-            @ApiImplicitParam(paramType="query", name = "futureInfo", value = "内容", required = true),
-            @ApiImplicitParam(paramType="query", name = "startNum", value = "展示区间开始值，如1个月", required = true),
-            @ApiImplicitParam(paramType="query", name = "endNum", value = "展示区间结束值，如10个月")
+            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType="query", name = "type", value = "展示类型，0、app展示，1、mail发送", dataTypeClass = Integer.class, required = true),
+            @ApiImplicitParam(paramType="query", name = "mail", value = "邮箱,type为1校验", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType="query", name = "futureInfo", value = "内容", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType="query", name = "startNum", value = "展示区间开始值，如1个月", dataTypeClass = Integer.class, required = true),
+            @ApiImplicitParam(paramType="query", name = "endNum", value = "展示区间结束值，如10个月", dataTypeClass = Integer.class)
     })
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
@@ -50,16 +50,16 @@ public class FutureController {
             return Result.paramIsNull();
         }
 
-        logger.warn("param is : {}", futureSaveVO.toString());
+        log.warn("param is : {}", futureSaveVO.toString());
 
         return futureService.saveFuture(futureSaveVO, userId);
     }
 
     @ApiOperation(value = "未来日记列表分页查询", notes = "未来日记列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, defaultValue = "1"),
-            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, defaultValue = "10"),
+            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType="query", name = "pageNum", value = "页数", required = true, dataTypeClass = Integer.class, defaultValue = "1"),
+            @ApiImplicitParam(paramType="query", name = "pageSize", value = "页容量", required = true, dataTypeClass = Integer.class, defaultValue = "10"),
     })
     @RequestMapping(value = "/page", method = RequestMethod.POST)
     @ResponseBody
@@ -74,7 +74,7 @@ public class FutureController {
             return Result.pageIsNull();
         }
 
-        logger.info("param is :" + userIdVO.toString());
+        log.info("param is :" + userIdVO);
 
         return futureService.pageFuture(userIdVO, userId);
     }

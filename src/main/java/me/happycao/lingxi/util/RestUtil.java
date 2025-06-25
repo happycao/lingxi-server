@@ -1,7 +1,8 @@
 package me.happycao.lingxi.util;
 
-import com.alibaba.fastjson.JSONException;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONException;
+import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
@@ -32,9 +33,8 @@ import java.util.Map;
  * desc    : http util
  * version : 1.0
  */
+@Slf4j
 public final class RestUtil {
-
-    private static final Logger logger = LoggerFactory.getLogger(RestUtil.class);
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
@@ -275,7 +275,7 @@ public final class RestUtil {
             if (!urlParams.isEmpty()) {
                 url = buildUrlParams(url, urlParams);
             }
-            logger.debug("url is {}", url);
+            log.debug("url is {}", url);
             // 请求方式
             switch (method) {
                 case GET:
@@ -307,7 +307,7 @@ public final class RestUtil {
             try {
                 response = httpClient.execute(httpPut);
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
                 return null;
             }
             return parsingResponse(response, httpClient, bean);
@@ -324,7 +324,7 @@ public final class RestUtil {
             try {
                 response = httpClient.execute(httpDelete);
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
                 return null;
             }
             return parsingResponse(response, httpClient, bean);
@@ -349,7 +349,7 @@ public final class RestUtil {
             try {
                 response = httpClient.execute(httpPost);
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
                 return null;
             }
             return parsingResponse(response, httpClient, bean);
@@ -369,7 +369,7 @@ public final class RestUtil {
             try {
                 response = httpClient.execute(httpGet);
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
                 return null;
             }
             return parsingResponse(response, httpClient, bean);
@@ -389,13 +389,13 @@ public final class RestUtil {
             }
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode != 200) {
-                logger.error("Status Code {}", statusCode);
+                log.error("Status Code {}", statusCode);
             }
 
             String body;
             try {
                 body = EntityUtils.toString(entity, CHARSET);
-                if (body == null || body.length() == 0) {
+                if (body == null || body.isEmpty()) {
                     return null;
                 }
                 if (bean.getName().equals(String.class.getName())) {
@@ -404,14 +404,14 @@ public final class RestUtil {
                     return JSONObject.parseObject(body, bean);
                 }
             } catch (IOException | JSONException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
                 return null;
             } finally {
                 try {
                     response.close();
                     httpClient.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.warn("failed {}", e.getMessage(), e);
                 }
             }
         }

@@ -4,10 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.RssService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,12 +19,11 @@ import javax.annotation.Resource;
  * desc   : 资源服务相关
  * version: 1.0
  */
+@Slf4j
 @Api(tags = "05-rss-upload", value = "RssApi", description = "资源上传相关接口")
 @RestController
 @RequestMapping("/rss/upload")
 public class RssController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private RssService mssService;
@@ -35,8 +33,8 @@ public class RssController {
      */
     @ApiOperation(value = "用户图片上传", notes = "用户图片上传接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "file", value = "图片文件 - 不可测试", required = true, dataType = "File", allowMultiple = true)
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "file", value = "图片文件 - 不可测试", required = true, dataTypeClass = MultipartFile.class, allowMultiple = true)
     })
     @RequestMapping(value = "/user/image", method = RequestMethod.POST)
     @ResponseBody
@@ -46,7 +44,7 @@ public class RssController {
             return Result.paramIsNull();
         }
 
-        logger.info("/user/image param:" + files.length);
+        log.info("/user/image param:" + files.length);
 
         return mssService.uploadUserImage(files);
     }
@@ -56,8 +54,8 @@ public class RssController {
      */
     @ApiOperation(value = "动态图片上传", notes = "动态图片上传接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "file", value = "图片文件 - 不可测试", required = true, dataType = "File", allowMultiple = true)
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "file", value = "图片文件 - 不可测试", required = true, dataTypeClass = MultipartFile.class, allowMultiple = true)
     })
     @RequestMapping(value = "/feed/image", method = RequestMethod.POST)
     @ResponseBody
@@ -67,8 +65,9 @@ public class RssController {
             return Result.paramIsNull();
         }
 
-        logger.info("/feed/image param:" + files.length);
+        log.info("/feed/image param:" + files.length);
 
         return mssService.uploadFeedImage(files);
     }
+
 }

@@ -4,11 +4,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedActionService;
 import me.happycao.lingxi.vo.FeedActionVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -21,21 +20,20 @@ import javax.annotation.Resource;
  * desc   : 动态相关操作
  * version: 1.0
  */
+@Slf4j
 @Api(tags = "03-feed-action", value = "FeedActionApi", description = "动态相关操作接口")
 @RestController
 @RequestMapping("/feed/action")
 public class FeedActionController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private FeedActionService feedActionService;
 
     @ApiOperation(value = "动态操作", notes = "动态喜欢|收藏接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型，0点赞1收藏", required = true),
-            @ApiImplicitParam(paramType = "query", name = "feedId", value = "动态id", required = true)
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "type", value = "操作类型，0点赞1收藏", dataTypeClass = Integer.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "feedId", value = "动态id", dataTypeClass = String.class, required = true)
     })
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
@@ -46,7 +44,7 @@ public class FeedActionController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + feedActionVO.toString());
+        log.info("param is :" + feedActionVO);
 
         return feedActionService.saveFeedAction(feedActionVO, userId);
     }
@@ -61,8 +59,9 @@ public class FeedActionController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + feedActionVO.toString());
+        log.info("param is :" + feedActionVO);
 
         return feedActionService.removeFeedAction(feedActionVO, userId);
     }
+
 }

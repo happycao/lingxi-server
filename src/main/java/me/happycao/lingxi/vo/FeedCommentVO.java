@@ -1,5 +1,8 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -7,24 +10,15 @@ package me.happycao.lingxi.vo;
  * desc   : 动态评论分页
  * version: 1.0
  */
+@Getter
+@Setter
 public class FeedCommentVO extends PageVO {
 
     private String feedId;
 
-    public String getFeedId() {
-        return feedId;
-    }
-
-    public void setFeedId(String feedId) {
-        this.feedId = feedId;
-    }
-
     @Override
     public String toString() {
-        return "FeedCommentVO{" +
-                "pageNum=" + pageNum +
-                ", feedId='" + feedId + '\'' +
-                ", pageSize=" + pageSize +
-                '}';
+        return super.toString();
     }
+
 }

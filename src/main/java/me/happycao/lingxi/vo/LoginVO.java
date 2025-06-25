@@ -1,5 +1,8 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -7,32 +10,16 @@ package me.happycao.lingxi.vo;
  * desc   : 登录参数
  * version: 1.0
  */
-public class LoginVO {
+@Getter
+@Setter
+public class LoginVO extends BaseVO {
 
     private String username;
     private String password;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public String toString() {
-        return "LoginVO{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return super.toString();
     }
+
 }

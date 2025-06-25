@@ -1,27 +1,25 @@
 spring:
   application:
-    name: lingxi
+    name: ling-xi
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   profiles:
-    active: '@profilesActive@'
+    active: @profilesActive@
   # swagger2兼容
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   # db
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      initial-size: 5
-      min-idle: 5
-      max-active: 50
-      max-wait: 3000
-      validation-query: "SELECT 1"
-      login-timeout: 30000
-      break-after-acquire-failure: true
-      connection-error-retry-attempts: 3
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 500000
+      max-lifetime: 540000
+      connection-timeout: 60000
+      connection-test-query: SELECT 1
 
 mybatis:
   type-aliases-package: me.happycao.lingxi.model
@@ -40,7 +38,3 @@ rss-path:
   windowsPath: D:/data/rss
   # /data/html/rss
   linuxPath: /usr/local/var/www/rss
-
-# 由nginx代理了实际地址，详情搜索资源采集，仅供学习
-inc-cnf:
-  apiUrl: http://localhost/inc/api

@@ -1,5 +1,6 @@
 package me.happycao.lingxi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.dao.UserDao;
 import me.happycao.lingxi.entity.TUser;
 import me.happycao.lingxi.mapper.TUserMapper;
@@ -14,11 +15,9 @@ import me.happycao.lingxi.vo.LoginVO;
 import me.happycao.lingxi.vo.RegisterVO;
 import me.happycao.lingxi.vo.UserSearchVO;
 import me.happycao.lingxi.vo.UserUpdateVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -31,10 +30,9 @@ import java.util.List;
  * desc   : 用户相关
  * version: 1.0
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TUserMapper tUserMapper;
@@ -76,8 +74,8 @@ public class UserServiceImpl implements UserService {
         tUser.setId(ParamUtil.getUUID());
         tUser.setUid(userDao.getNewUid());
         tUser.setUsername(username);
-        // 密码加密暂不支持
-        tUser.setPassword(password);
+        // 密码加密，传递过程也可考虑对称加密
+        tUser.setPassword(DigestUtil.hashPwd(password));
         tUser.setPhone(registerVO.getPhone());
         tUserMapper.insertSelective(tUser);
 
@@ -101,7 +99,6 @@ public class UserServiceImpl implements UserService {
         // 用户名登录
         TUser param = new TUser();
         param.setUsername(username);
-        param.setPassword(password);
         TUser tUser = tUserMapper.selectOne(param);
 
         // 支持手机号登录
@@ -111,7 +108,11 @@ public class UserServiceImpl implements UserService {
             tUser = tUserMapper.selectOne(param);
         }
         if (tUser == null) {
-            result.setCodeAndMsg("00104", "用户名或密码错误");
+            result.setCodeAndMsg("00104", "用户不存在");
+            return result;
+        }
+        if (!DigestUtil.checkPwd(password, tUser.getPassword())) {
+            result.setCodeAndMsg("00104", "密码错误");
             return result;
         }
         if (tUser.getState() != 1) {
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService {
             result.setCodeAndMsg("00104", "用户不存在");
             return result;
         }
-        tUser.setPassword(password);
+        tUser.setPassword(DigestUtil.hashPwd(password));
         tUserMapper.updateByPrimaryKeySelective(tUser);
 
         // 隐藏手机号

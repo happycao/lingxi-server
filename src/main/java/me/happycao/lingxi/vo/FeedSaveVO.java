@@ -1,5 +1,8 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
 /**
@@ -9,7 +12,9 @@ import java.util.List;
  * desc   : 动态保存参数
  * version: 1.0
  */
-public class FeedSaveVO {
+@Getter
+@Setter
+public class FeedSaveVO extends BaseVO {
 
     private String userId;
 
@@ -17,36 +22,9 @@ public class FeedSaveVO {
 
     private List<String> photoList;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getFeedInfo() {
-        return feedInfo;
-    }
-
-    public void setFeedInfo(String feedInfo) {
-        this.feedInfo = feedInfo;
-    }
-
-    public List<String> getPhotoList() {
-        return photoList;
-    }
-
-    public void setPhotoList(List<String> photoList) {
-        this.photoList = photoList;
-    }
-
     @Override
     public String toString() {
-        return "FeedSaveVO{" +
-                "userId='" + userId + '\'' +
-                ", feedInfo='" + feedInfo + '\'' +
-                ", photoList=" + photoList +
-                '}';
+        return super.toString();
     }
+
 }

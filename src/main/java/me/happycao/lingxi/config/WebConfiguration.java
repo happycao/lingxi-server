@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author : happyc
@@ -14,8 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * desc   : 静态资源设置
  * version: 1.0
  */
-@Configuration
-public class WebConfiguration extends WebMvcConfigurerAdapter {
+//@Configuration
+public class WebConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -39,4 +39,5 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
         scheduler.setThreadNamePrefix("scheduled-thread-");
         return scheduler;
     }
+
 }

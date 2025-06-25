@@ -4,12 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.vo.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -18,21 +17,20 @@ import javax.annotation.Resource;
 /**
  * @author happyc
  */
+@Slf4j
 @Api(tags = "01-user", value = "UserApi", description = "用户相关接口")
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private UserService userService;
 
     @ApiOperation(value = "账号注册", notes = "账号注册接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号", required = true),
-            @ApiImplicitParam(paramType="query", name = "username", value = "用户名", required = true),
-            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = true)
+            @ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", dataTypeClass = String.class, required = true)
     })
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
@@ -41,15 +39,15 @@ public class UserController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + registerVO.toString());
+        log.info("param is :" + registerVO);
 
         return userService.register(registerVO);
     }
 
     @ApiOperation(value = "用户登录", notes = "用户登录接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "username", value = "用户名", required = true),
-            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = true)
+            @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", dataTypeClass = String.class, required = true)
     })
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
@@ -58,16 +56,16 @@ public class UserController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + loginVO.toString());
+        log.info("param is :" + loginVO);
 
         return userService.login(loginVO);
     }
 
     @ApiOperation(value = "密码重置", notes = "密码重置接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号", required = true),
-            @ApiImplicitParam(paramType="query", name = "username", value = "用户名", required = true),
-            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = true)
+            @ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", dataTypeClass = String.class, required = true)
     })
     @RequestMapping(value = "/reset", method = RequestMethod.POST)
     @ResponseBody
@@ -76,21 +74,21 @@ public class UserController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + registerVO.toString());
+        log.info("param is :" + registerVO);
 
         return userService.resetPassword(registerVO);
     }
 
     @ApiOperation(value = "用户资料更改", notes = "用户资料更改接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号"),
-            @ApiImplicitParam(paramType="query", name = "username", value = "用户名"),
-            @ApiImplicitParam(paramType="query", name = "password", value = "密码"),
-            @ApiImplicitParam(paramType="query", name = "sex", value = "性别，-1未知，0女1男"),
-            @ApiImplicitParam(paramType="query", name = "qq", value = "QQ号"),
-            @ApiImplicitParam(paramType="query", name = "avatar", value = "头像路径"),
-            @ApiImplicitParam(paramType="query", name = "signature", value = "个性签名")
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "phone", value = "手机号", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "password", value = "密码", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "sex", value = "性别，-1未知，0女1男", dataTypeClass = Integer.class),
+            @ApiImplicitParam(paramType = "query", name = "qq", value = "QQ号", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "avatar", value = "头像路径", dataTypeClass = String.class),
+            @ApiImplicitParam(paramType = "query", name = "signature", value = "个性签名", dataTypeClass = String.class)
     })
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -99,15 +97,15 @@ public class UserController {
             return Result.paramIsNull();
         }
 
-        logger.info("userId is {}, param is {}", userId, userUpdateVO.toString());
+        log.info("userId is {}, param is {}", userId, userUpdateVO.toString());
 
         return userService.updateUser(userUpdateVO, userId);
     }
 
     @ApiOperation(value = "用户信息查询", notes = "用户信息查询接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "id", value = "用户id", defaultValue = Constant.DEFAULT_USER_ID)
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "id", value = "用户id", dataTypeClass = String.class, defaultValue = Constant.DEFAULT_USER_ID)
     })
     @RequestMapping(value = "/info", method = RequestMethod.POST)
     @ResponseBody
@@ -117,7 +115,7 @@ public class UserController {
             id = idVO.getId();
         }
 
-        logger.info("param is :" + id);
+        log.info("param is :" + id);
 
         return userService.getUser(id, userId);
     }
@@ -133,8 +131,8 @@ public class UserController {
 
     @ApiOperation(value = "精准搜索用户", notes = "精准搜索用户接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "username", value = "用户名", required = true)
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", dataTypeClass = String.class, required = true)
     })
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     @ResponseBody
@@ -143,15 +141,15 @@ public class UserController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + userSearchVO.toString());
+        log.info("param is :" + userSearchVO);
 
         return userService.searchUser(userSearchVO);
     }
 
     @ApiOperation(value = "模糊查询用户", notes = "模糊查询用户接口")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="header", name = "X-App-Token", value = "token", required = true),
-            @ApiImplicitParam(paramType="query", name = "username", value = "用户名", required = true)
+            @ApiImplicitParam(paramType = "header", name = "X-App-Token", value = "token", dataTypeClass = String.class, required = true),
+            @ApiImplicitParam(paramType = "query", name = "username", value = "用户名", dataTypeClass = String.class, required = true)
     })
     @RequestMapping(value = "/query", method = RequestMethod.POST)
     @ResponseBody
@@ -160,8 +158,9 @@ public class UserController {
             return Result.paramIsNull();
         }
 
-        logger.info("param is :" + userSearchVO.toString());
+        log.info("param is :" + userSearchVO);
 
         return userService.queryUser(userSearchVO);
     }
+
 }

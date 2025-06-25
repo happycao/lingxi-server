@@ -4,10 +4,10 @@ import me.happycao.lingxi.entity.TAppVersion;
 import me.happycao.lingxi.mapper.TAppVersionMapper;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.AppVersionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class AppVersionServiceImpl implements AppVersionService {
 
-    @Autowired
+    @Resource
     private TAppVersionMapper tAppVersionMapper;
 
     @Override
@@ -31,10 +31,11 @@ public class AppVersionServiceImpl implements AppVersionService {
 
         List<TAppVersion> tAppVersions = tAppVersionMapper.selectByExample(example);
         TAppVersion tAppVersion = null;
-        if (tAppVersions != null && tAppVersions.size() > 0){
+        if (tAppVersions != null && !tAppVersions.isEmpty()){
             tAppVersion = tAppVersions.get(0);
         }
 
         return Result.success(tAppVersion);
     }
+
 }

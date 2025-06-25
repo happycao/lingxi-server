@@ -2,10 +2,9 @@ package me.happycao.lingxi.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.AppVersionService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,12 +19,11 @@ import javax.annotation.Resource;
  * desc   : app版本
  * version: 1.0
  */
+@Slf4j
 @Api(tags = "06-app-version", value = "AppApi", description = "Android App版本接口")
 @RestController
 @RequestMapping("/app/version")
 public class AppVersionController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private AppVersionService appVersionService;

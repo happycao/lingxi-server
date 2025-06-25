@@ -1,5 +1,8 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -7,29 +10,15 @@ package me.happycao.lingxi.vo;
  * desc   : 状态参数
  * version: 1.0
  */
-public class StateVO {
+@Getter
+@Setter
+public class StateVO extends BaseVO {
 
     private Integer state;
 
-    public StateVO() {
-    }
-
-    public StateVO(Integer state) {
-        this.state = state;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
     @Override
     public String toString() {
-        return "StateVO{" +
-                "state=" + state +
-                '}';
+        return super.toString();
     }
+
 }

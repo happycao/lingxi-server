@@ -1,13 +1,13 @@
 package me.happycao.lingxi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.constant.RssConfig;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.RssService;
 import me.happycao.lingxi.util.DateUtil;
 import me.happycao.lingxi.util.ParamUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,10 +25,9 @@ import java.util.List;
  * desc   : 资源服务相关
  * version: 1.0
  */
+@Slf4j
 @Service
 public class RssServiceImpl implements RssService {
-
-    private static final Logger logger = LoggerFactory.getLogger(RssServiceImpl.class);
 
     @Resource
     private RssConfig rssConfig;
@@ -67,22 +66,25 @@ public class RssServiceImpl implements RssService {
         // 上传目录 | 新增以年月划分的文件夹，减轻一个文件夹保存文件的压力
         typePath = typePath + DateUtil.formatYm(new Date()) + RssConfig.FORWARD_SLASH;
         String dirPath = rssConfig.getUploadPath() + typePath;
-        logger.warn("upload path : " + dirPath);
-
+        log.warn("upload path : " + dirPath);
 
         for (MultipartFile multipartFile : files) {
             String fileName = multipartFile.getOriginalFilename();
+            if (StringUtils.isBlank(fileName)) {
+                continue;
+            }
 
-            String fileType = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+            String fileType = fileName.substring(fileName.lastIndexOf("."));
 
             if (!verifyType(fileType, types)) {
-                logger.warn("uploadFile : " + fileName);
+                log.warn("uploadFile : " + fileName);
                 result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "格式不符合要求，只支持" + appendType(types));
                 return result;
             }
             File file = new File(dirPath);
             if (!file.exists()) {
-                file.mkdirs();
+                boolean mkdir = file.mkdirs();
+                log.debug("mkdir {} {}", file.getPath(), mkdir);
             }
 
             // 重命名文件
@@ -93,8 +95,8 @@ public class RssServiceImpl implements RssService {
                 // 保存文件
                 multipartFile.transferTo(file);
             } catch (IOException e) {
-                logger.warn("uploadFile : " + e.toString(), e);
-                result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "上传失败，error：" + e.toString());
+                log.warn("uploadFile : " + e.getMessage(), e);
+                result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "上传失败，error：" + e.getMessage());
                 return result;
             }
 
@@ -123,14 +125,7 @@ public class RssServiceImpl implements RssService {
      * 拼接类型字符
      */
     private String appendType(String... types) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0, size = types.length; i < size; i++) {
-            if (i == 0) {
-                builder.append(types[i]);
-            } else {
-                builder.append("和").append(types[i]);
-            }
-        }
-        return builder.toString();
+        return String.join("和", types);
     }
+
 }

@@ -1,12 +1,11 @@
 package me.happycao.lingxi.config;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.entity.TUser;
 import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.UserService;
 import me.happycao.lingxi.util.DigestUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,10 +18,9 @@ import java.io.IOException;
  * @author happyc
  * Api安全过滤
  */
+@Slf4j
 @Component
 public class ApiSecurityFilter implements Filter {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String CONTENT_TYPE_JSON = "application/json;charset=UTF-8";
 
@@ -38,7 +36,7 @@ public class ApiSecurityFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String requestUri = request.getRequestURI();
-        logger.info("url is :{}", requestUri);
+        log.info("url is :{}", requestUri);
 
         boolean notVerify = requestUri.contains("register") || requestUri.contains("reset") || requestUri.contains("login");
 

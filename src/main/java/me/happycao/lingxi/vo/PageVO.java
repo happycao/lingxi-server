@@ -1,4 +1,8 @@
 package me.happycao.lingxi.vo;
+
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -6,32 +10,16 @@ package me.happycao.lingxi.vo;
  * desc   : 分页参数
  * version: 1.0
  */
-public class PageVO {
+@Getter
+@Setter
+public class PageVO extends BaseVO{
 
     protected Integer pageNum;
     protected Integer pageSize;
 
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     @Override
     public String toString() {
-        return "PageVO{" +
-                "pageNum=" + pageNum +
-                ", pageSize=" + pageSize +
-                '}';
+        return super.toString();
     }
+
 }

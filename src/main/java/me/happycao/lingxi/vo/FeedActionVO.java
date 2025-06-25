@@ -1,6 +1,11 @@
 package me.happycao.lingxi.vo;
 
-public class FeedActionVO {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class FeedActionVO extends BaseVO{
 
     private Integer type;
 
@@ -8,36 +13,9 @@ public class FeedActionVO {
 
     private String userId;
 
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
-
-    public String getFeedId() {
-        return feedId;
-    }
-
-    public void setFeedId(String feedId) {
-        this.feedId = feedId == null ? null : feedId.trim();
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId == null ? null : userId.trim();
-    }
-
     @Override
     public String toString() {
-        return "FeedActionVO{" +
-                "type=" + type +
-                ", feedId='" + feedId + '\'' +
-                ", userId='" + userId + '\'' +
-                '}';
+        return super.toString();
     }
+
 }

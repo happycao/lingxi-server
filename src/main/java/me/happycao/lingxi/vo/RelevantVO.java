@@ -1,5 +1,8 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -7,24 +10,15 @@ package me.happycao.lingxi.vo;
  * desc   :
  * version: 1.0
  */
+@Getter
+@Setter
 public class RelevantVO extends PageVO {
 
     private String userId;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     @Override
     public String toString() {
-        return "RelevantVO{" +
-                "pageNum=" + pageNum +
-                ", userId='" + userId + '\'' +
-                ", pageSize=" + pageSize +
-                '}';
+        return super.toString();
     }
+
 }

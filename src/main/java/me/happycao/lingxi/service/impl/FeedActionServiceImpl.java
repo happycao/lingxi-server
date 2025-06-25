@@ -1,5 +1,6 @@
 package me.happycao.lingxi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.entity.TFeedAction;
 import me.happycao.lingxi.mapper.TFeedActionMapper;
@@ -7,10 +8,8 @@ import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedActionService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FeedActionVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -21,10 +20,9 @@ import javax.annotation.Resource;
  * desc   : 动态相关操作，0点赞1收藏
  * version: 1.0
  */
+@Slf4j
 @Service
 public class FeedActionServiceImpl implements FeedActionService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFeedActionMapper tFeedActionMapper;
@@ -37,7 +35,7 @@ public class FeedActionServiceImpl implements FeedActionService {
         Integer type = feedActionVO.getType();
         String feedId = feedActionVO.getFeedId();
         if (type == null || StringUtils.isEmpty(feedId)) {
-            logger.warn("param warn : 必填参数不全");
+            log.warn("param warn : 必填参数不全");
             result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "必填参数不全");
             return result;
         }
@@ -69,7 +67,7 @@ public class FeedActionServiceImpl implements FeedActionService {
         Integer type = feedActionVO.getType();
         String feedId = feedActionVO.getFeedId();
         if (type == null || StringUtils.isEmpty(feedId)) {
-            logger.warn("param warn : 必填参数不全");
+            log.warn("param warn : 必填参数不全");
             result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, "必填参数不全");
             return result;
         }
@@ -81,4 +79,5 @@ public class FeedActionServiceImpl implements FeedActionService {
         tFeedActionMapper.delete(param);
         return result;
     }
+
 }

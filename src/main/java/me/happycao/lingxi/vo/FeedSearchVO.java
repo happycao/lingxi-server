@@ -1,5 +1,7 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -9,6 +11,8 @@ import springfox.documentation.annotations.ApiIgnore;
  * desc   : 动态列表参数
  * version: 1.0
  */
+@Getter
+@Setter
 public class FeedSearchVO extends PageVO {
 
     private String userId;
@@ -25,29 +29,9 @@ public class FeedSearchVO extends PageVO {
         this.userId = userId;
     }
 
-    public String getSearchUserId() {
-        return searchUserId;
-    }
-
-    public void setSearchUserId(String searchUserId) {
-        this.searchUserId = searchUserId;
-    }
-
-    public String getTopicId() {
-        return topicId;
-    }
-
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
-    }
-
     @Override
     public String toString() {
-        return "{" +
-                "searchUserId='" + searchUserId + '\'' +
-                ", topicId='" + topicId + '\'' +
-                ", pageNum=" + pageNum +
-                ", pageSize=" + pageSize +
-                '}';
+        return super.toString();
     }
+
 }

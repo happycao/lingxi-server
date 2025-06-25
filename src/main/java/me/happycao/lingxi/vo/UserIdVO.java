@@ -1,5 +1,9 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -7,12 +11,12 @@ package me.happycao.lingxi.vo;
  * desc   : 用户id参数
  * version: 1.0
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserIdVO extends PageVO {
 
     private String userId;
-
-    public UserIdVO() {
-    }
 
     public UserIdVO(PageVO pageVO) {
         setPageNum(pageVO.getPageNum());
@@ -23,18 +27,9 @@ public class UserIdVO extends PageVO {
         this.userId = userId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     @Override
     public String toString() {
-        return "UserIdVO{" +
-                "userId='" + userId + '\'' +
-                '}';
+        return super.toString();
     }
+
 }

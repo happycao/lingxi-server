@@ -1,5 +1,6 @@
 package me.happycao.lingxi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.dao.FutureDao;
 import me.happycao.lingxi.entity.TFuture;
 import me.happycao.lingxi.mapper.TFutureMapper;
@@ -10,12 +11,9 @@ import me.happycao.lingxi.service.FutureService;
 import me.happycao.lingxi.util.DateUtil;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.FutureSaveVO;
-import me.happycao.lingxi.vo.PageVO;
 import me.happycao.lingxi.vo.UserIdVO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -28,10 +26,9 @@ import java.util.List;
  * desc   : 给未来的消息
  * version: 1.0
  */
+@Slf4j
 @Service
 public class FutureServiceImpl implements FutureService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFutureMapper futureMapper;

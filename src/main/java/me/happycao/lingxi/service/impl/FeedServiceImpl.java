@@ -1,5 +1,6 @@
 package me.happycao.lingxi.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import me.happycao.lingxi.constant.Constant;
 import me.happycao.lingxi.dao.FeedDao;
 import me.happycao.lingxi.dao.RelevantDao;
@@ -13,12 +14,10 @@ import me.happycao.lingxi.result.Result;
 import me.happycao.lingxi.service.FeedService;
 import me.happycao.lingxi.util.ParamUtil;
 import me.happycao.lingxi.vo.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -33,10 +32,9 @@ import java.util.List;
  * desc   : 动态
  * version: 1.0
  */
+@Slf4j
 @Service
 public class FeedServiceImpl implements FeedService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Resource
     private TFeedMapper tFeedMapper;
@@ -96,7 +94,7 @@ public class FeedServiceImpl implements FeedService {
 
         String feedInfo = feedSaveVO.getFeedInfo();
         if (StringUtils.isEmpty(feedInfo)) {
-            logger.warn("param warn : feedInfo为空");
+            log.warn("param warn : feedInfo为空");
             result.setCodeAndMsg(Constant.ERROR_CODE_PARAM_NULL, Constant.ERROR_MSG_PARAM_NULL);
             return result;
         }
@@ -119,7 +117,7 @@ public class FeedServiceImpl implements FeedService {
                 tFeedPhoto.setFeedId(feedId);
                 tFeedPhoto.setUrl(url);
                 tFeedPhotoMapper.insertSelective(tFeedPhoto);
-                logger.info("photo {}", url);
+                log.info("photo {}", url);
             }
         }
 

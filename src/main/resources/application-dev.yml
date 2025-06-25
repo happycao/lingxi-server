@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/lingxi-server?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/lingxi_server?characterEncoding=utf8&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
     password:
 

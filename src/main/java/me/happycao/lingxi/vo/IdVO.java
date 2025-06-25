@@ -1,5 +1,8 @@
 package me.happycao.lingxi.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author : happyc
  * e-mail : bafs.jy@live.com
@@ -7,22 +10,15 @@ package me.happycao.lingxi.vo;
  * desc   : 参数id
  * version: 1.0
  */
-public class IdVO {
+@Getter
+@Setter
+public class IdVO extends BaseVO {
 
     private String id;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
-        return "IdVO{" +
-                "id='" + id + '\'' +
-                '}';
+        return super.toString();
     }
+
 }

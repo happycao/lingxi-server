@@ -1,5 +1,6 @@
 package me.happycao.lingxi.util;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.util.DigestUtils;
 
 /**
@@ -34,6 +35,18 @@ public class DigestUtil {
             return phone.replaceAll("(\\d{3})\\d{4}(\\d{4})","$1****$2");
         } else {
             return "";
+        }
+    }
+
+    public static String hashPwd(String pwd) {
+        return BCrypt.hashpw(pwd, BCrypt.gensalt());
+    }
+
+    public static boolean checkPwd(String pwd, String pwt) {
+        try {
+            return BCrypt.checkpw(pwd, pwt);
+        } catch (Exception e) {
+            return false;
         }
     }
 
